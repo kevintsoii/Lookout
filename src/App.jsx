@@ -3,7 +3,6 @@ import { Card, CardHeader, CardTitle } from "./components/card";
 import FeatureList from "./components/FeatureList";
 import LogsColumn from "./components/LogsColumn";
 import WebcamCapture from "./components/webcam/WebcamSetup";
-import io from "socket.io-client";
 
 export default function App() {
   const [features, setFeatures] = useState([
