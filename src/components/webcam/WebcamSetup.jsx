@@ -90,7 +90,6 @@ const WebcamCapture = () => {
         >
           Add Camera
         </button>
-
         <select
           className="mb-12 w-96"
           onChange={handleSelectChange}
@@ -107,6 +106,7 @@ const WebcamCapture = () => {
         </select>
       </div>
     </div>
+    
   );
 };
 
