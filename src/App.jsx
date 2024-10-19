@@ -3,7 +3,6 @@ import { PlusCircle, AlertTriangle, CheckCircle, Video } from "lucide-react";
 import { Button } from "./components/button";
 import { Input } from "./components/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/card";
-import "./App.css";
 
 export default function Component() {
   const [features, setFeatures] = useState([
