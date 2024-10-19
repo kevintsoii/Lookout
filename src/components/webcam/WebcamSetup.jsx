@@ -19,6 +19,7 @@ const WebcamCapture = () => {
 
   // Fetch video input devices
   useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true });
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const videoDevices = devices.filter(
         (device) => device.kind === "videoinput"

@@ -27,7 +27,7 @@ const Webcam = ({ camera }) => {
   return (
     <div className="flex flex-col min-w-full max-h-[70%] items-center px-[15%] py-6">
       {camera.recording && (
-        <div className="flex flex-col h-full w-full bg-gray-200 px-6 py-6 gap-3">
+        <div className="flex flex-col h-full w-full bg-gray-200 px-[3%] py-[3%] gap-3">
           <div className="flex justify-between">
             <h1 className="self-start font-medium text-xl ">{camera.label}</h1>
             <div>
