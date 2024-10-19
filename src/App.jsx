@@ -4,6 +4,8 @@ import { Button } from "./components/button";
 import { Input } from "./components/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/card";
 
+import WebcamSetup from "./components/webcam/WebcamSetup";
+
 export default function Component() {
   const [features, setFeatures] = useState([
     "Suspicious movement",
@@ -63,13 +65,8 @@ export default function Component() {
             <CardHeader>
               <CardTitle>Live Video Feed</CardTitle>
             </CardHeader>
-            <CardContent className="flex-grow flex items-center justify-center bg-gray-200">
-              <Video className="h-32 w-32 text-gray-400" />
-            </CardContent>
-            <div className="p-4">
-              <Button className="w-full">
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Camera
-              </Button>
+            <div className="custom-scrollbar overflow-x-hidden grow flex flex-col px-12 w-full text-xl justify-center items-center">
+              <WebcamSetup />
             </div>
           </Card>
         </div>
