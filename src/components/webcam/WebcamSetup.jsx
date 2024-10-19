@@ -19,13 +19,24 @@ const WebcamCapture = () => {
 
   // Fetch video input devices
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true });
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-      const videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
-      setSystemCameras(videoDevices);
-    });
+    const getCameras = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        stream.getTracks().forEach((track) => track.stop());
+
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
+        setSystemCameras(videoDevices);
+      } catch (error) {
+        console.error("Error accessing media devices.", error);
+      }
+    };
+
+    getCameras();
   }, []);
 
   const addCamera = () => {
@@ -75,7 +86,7 @@ const WebcamCapture = () => {
         </button>
 
         <select
-          className="mb-12"
+          className="mb-12 w-96"
           onChange={handleSelectChange}
           value={selected.deviceId || ""}
         >
