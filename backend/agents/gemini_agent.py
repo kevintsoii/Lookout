@@ -1,4 +1,5 @@
-from uagents import Agent, Context
+from uagents import Agent, Context, Model
+from uagents.query import query
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -30,11 +31,11 @@ def upload_file_data(file_data):
             raise ValueError("File upload failed. No URI returned.")
     
     
-
-def send_video_to_api():
+                   # path_name
+def send_video_to_api(file_path):
 
     file_data = {
-        "filename": "/Users/marvinzhai/Desktop/videos/threat.mp4" ,
+        "filename": "{file_path}" ,
         "mime_type": "video/mp4"
     }
 
@@ -83,10 +84,25 @@ def send_video_to_api():
 
   
 
-send_video_to_api()
+#   send_video_to_api()
 
 
-#video_agent = Agent(name="video_agent")
+
+class Request(Model):
+    command: str
 
 
-#@video_agent.on_interval(period=1.0)
+# video_protocol = VideoProtocol()
+video_agent = Agent(
+    name="video_agent",
+    seed="sending video to gemini",
+    endpoint="http://localhost:5173",
+)
+                    
+
+@video_agent.on_query(model=Request)
+async def query_handler(ctx:Context, sender: str, _query: Request):
+    file_path = _query.file_path
+    ctx.logger.info("Received file path: {file_path}")
+
+    send_video_to_api(file_path)
