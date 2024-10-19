@@ -48,11 +48,11 @@ def send_video_to_api(file_path):
 
     # Create the gemini model
     generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 64,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 64,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
     }
 
     # Prepare the content with the video and prompt
@@ -81,7 +81,7 @@ def send_video_to_api(file_path):
 
     # with open('gemini_response.json','w') as response_file:
     #     json.dump(response_text, response_file)
-
+ 
   
 
 #   send_video_to_api()
