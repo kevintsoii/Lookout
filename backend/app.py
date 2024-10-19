@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from uagents.query import query
 from uagents import Model
 
-#app = Flask(__name__)
+app = Flask(__name__)
 
 AGENT_ADDRESS = "agent1qgpagptgy525qxnl20383gphrf42wctpw5hg6h0lsajtte9w4zl2qgumtgv"
 
