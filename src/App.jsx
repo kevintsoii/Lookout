@@ -1,26 +1,29 @@
-import { useState } from 'react'
-import { PlusCircle, AlertTriangle, CheckCircle, Video } from 'lucide-react'
-import { Button } from "./components/ui/button"
-import { Input } from "./components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card"
-import './App.css'
-
+import { useState } from "react";
+import { PlusCircle, AlertTriangle, CheckCircle, Video } from "lucide-react";
+import { Button } from "./components/button";
+import { Input } from "./components/input";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/card";
+import "./App.css";
 
 export default function Component() {
-  const [features, setFeatures] = useState(['Suspicious movement', 'Unidentified objects', 'Unauthorized access'])
-  const [newFeature, setNewFeature] = useState('')
+  const [features, setFeatures] = useState([
+    "Suspicious movement",
+    "Unidentified objects",
+    "Unauthorized access",
+  ]);
+  const [newFeature, setNewFeature] = useState("");
   const [logs, setLogs] = useState([
-    { id: 1, message: 'All clear', status: 'safe' },
-    { id: 2, message: 'Suspicious movement detected', status: 'danger' },
-    { id: 3, message: 'Unidentified object spotted', status: 'danger' },
-  ])
+    { id: 1, message: "All clear", status: "safe" },
+    { id: 2, message: "Suspicious movement detected", status: "danger" },
+    { id: 3, message: "Unidentified object spotted", status: "danger" },
+  ]);
 
   const addFeature = () => {
     if (newFeature) {
-      setFeatures([...features, newFeature])
-      setNewFeature('')
+      setFeatures([...features, newFeature]);
+      setNewFeature("");
     }
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
@@ -43,9 +46,9 @@ export default function Component() {
             ))}
           </ul>
           <div className="flex space-x-2">
-            <Input 
-              type="text" 
-              value={newFeature} 
+            <Input
+              type="text"
+              value={newFeature}
               onChange={(e) => setNewFeature(e.target.value)}
               placeholder="New feature"
             />
@@ -77,9 +80,16 @@ export default function Component() {
           <h2 className="text-2xl font-bold mb-4">Logs</h2>
           <div className="space-y-2">
             {logs.map((log) => (
-              <Card key={log.id} className={log.status === 'danger' ? 'border-red-500' : 'border-green-500'}>
+              <Card
+                key={log.id}
+                className={
+                  log.status === "danger"
+                    ? "border-red-500"
+                    : "border-green-500"
+                }
+              >
                 <CardContent className="flex items-center p-2">
-                  {log.status === 'danger' ? (
+                  {log.status === "danger" ? (
                     <AlertTriangle className="text-red-500 mr-2" />
                   ) : (
                     <CheckCircle className="text-green-500 mr-2" />
@@ -92,5 +102,5 @@ export default function Component() {
         </div>
       </div>
     </div>
-  )
+  );
 }
