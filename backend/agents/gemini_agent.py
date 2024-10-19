@@ -3,8 +3,8 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 import json
-from IPython.display import display, Markdown
 import pathlib
+import time
 
 
 load_dotenv()
@@ -24,6 +24,8 @@ def upload_file_data(file_data):
         file_info = genai.upload_file(path=name, display_name=name, mime_type=mime_type)
         if file_info and file_info.uri:
             file_data["file_uri"] = file_info.uri
+            print("Waiting for file to become active...")
+            time.sleep(2)
         else:
             raise ValueError("File upload failed. No URI returned.")
     
@@ -32,8 +34,8 @@ def upload_file_data(file_data):
 def send_video_to_api():
 
     file_data = {
-        "filename": "/Users/marvinzhai/Downloads/IMG_2771.mov" ,
-        "mime_type": "video/quicktime"
+        "filename": "/Users/marvinzhai/Desktop/videos/threat.mp4" ,
+        "mime_type": "video/mp4"
     }
 
     # Upload function to convert file 
@@ -72,10 +74,12 @@ def send_video_to_api():
     )
 
     for candidate in response.candidates:
-        response_text = candidate.content.parts[0].text
+        print(candidate.content.parts[0].text)
 
-    with open('gemini_response.json','w') as response_file:
-        json.dump(response_text, response_file)
+        
+
+    # with open('gemini_response.json','w') as response_file:
+    #     json.dump(response_text, response_file)
 
   
 
