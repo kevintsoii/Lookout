@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 import Webcam from "./Webcam";
+import { Video } from "lucide-react";
 
 const WebcamCapture = () => {
   /*
@@ -60,7 +61,7 @@ const WebcamCapture = () => {
           <Webcam key={index} camera={{ ...camera, index }} />
         ))
       ) : (
-        <div className="min-w-[500px] min-h-[300px] bg-slate-300"></div>
+        <Video className="h-32 w-32 text-gray-400 bg-gray-200 min-w-[500px] min-h-[300px]" />
       )}
 
       <div className="flex flex-col w-full items-center mt-4">
