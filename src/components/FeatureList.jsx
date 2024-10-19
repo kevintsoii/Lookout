@@ -22,9 +22,9 @@ const FeatureList = ({ features, newFeature, setNewFeature, addFeature }) => {
           placeholder="New feature"
           className="mb-2 w-full"
         />
-        <Button 
-          onClick={addFeature} 
-          className="w-full flex items-center justify-center text-xl"
+        <Button
+          onClick={addFeature}
+          className="w-full flex items-center justify-center text-xl active:scale-95"
         >
           <PlusCircle className="mr-2 h-5 w-5" />
           <span>Add Feature</span>

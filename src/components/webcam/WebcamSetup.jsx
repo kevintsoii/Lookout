@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 import Webcam from "./Webcam";
-import { Video } from "lucide-react";
+import { Video, PlusCircle } from "lucide-react";
+import { Button } from "../button";
 
 const WebcamCapture = () => {
   /*
@@ -50,7 +51,7 @@ const WebcamCapture = () => {
 
     const newCamera = {
       deviceId: selected.deviceId,
-      label: selected.label || `Camera ${device.deviceId}`,
+      label: selected.label || `Camera ${selected.deviceId}`,
       cameraRef: React.createRef(),
       socket: newSocket,
       recording: true,
@@ -73,25 +74,20 @@ const WebcamCapture = () => {
   };
 
   return (
-    <div className="flex flex-col w-full max-h-full items-center">
+    <div className="relative flex flex-col w-full min-h-full py-6 max-h-full items-center">
       {cameras.length > 0 ? (
         cameras.map((camera, index) => (
           <Webcam key={camera.id} camera={{ ...camera, index }} />
         ))
       ) : (
-        <Video className="h-32 w-32 text-gray-400 bg-gray-200 min-w-[500px] min-h-[300px]" />
+        <div className="h-12 w-12 text-gray-400 bg-gray-200 min-w-[500px] min-h-[300px] items-center justify-center flex">
+          <Video size={175} />
+        </div>
       )}
 
-      <div className="flex flex-col w-full items-center mt-4">
-        <button
-          className="bg-blue-200"
-          onClick={addCamera}
-          disabled={!selected?.deviceId}
-        >
-          Add Camera
-        </button>
+      <div className=" sticky  bottom-0 left-0 pt-3 border-gray-400 border-t bg-white flex flex-col w-full items-center mt-4 gap-3">
         <select
-          className="mb-12 w-96"
+          className=" w-96 border-gray-400 border active:border-black pl-2 w-full"
           onChange={handleSelectChange}
           value={selected.deviceId || ""}
         >
@@ -104,9 +100,17 @@ const WebcamCapture = () => {
             </option>
           ))}
         </select>
+
+        <Button
+          className="w-full flex items-center justify-center active:scale-95 mb-6"
+          onClick={addCamera}
+          disabled={!selected?.deviceId}
+        >
+          <PlusCircle className="mr-2 h-5 w-5" />
+          <span className="text-xl">Add Camera</span>
+        </Button>
       </div>
     </div>
-    
   );
 };
 

@@ -1,14 +1,9 @@
 import { useState } from "react";
-import { Video, PlusCircle } from "lucide-react";
-import { Button } from "./components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./components/card";
+import { Card, CardHeader, CardTitle } from "./components/card";
 import FeatureList from "./components/FeatureList";
 import LogsColumn from "./components/LogsColumn";
-import Webcam from "./components/webcam/Webcam";
-import WebcamSetup from "./components/webcam/WebcamSetup";
 import WebcamCapture from "./components/webcam/WebcamSetup";
 import io from "socket.io-client";
-
 
 export default function App() {
   const [features, setFeatures] = useState([
@@ -72,17 +67,6 @@ export default function App() {
 
             <div className="custom-scrollbar overflow-x-hidden grow flex flex-col px-12 w-full text-xl justify-center items-center rounded-md">
               <WebcamCapture />
-            </div>
-
-            <div className="p-3">
-              <Button 
-              className="w-full flex items-center justify-center"
-              onClick={addCamera}
-              // disabled={!selected?.deviceId}
-              >
-                <PlusCircle className="mr-2 h-5 w-5" />
-                <span className="text-xl">Add Camera</span>
-              </Button>
             </div>
           </Card>
         </div>
