@@ -5,13 +5,14 @@ const Webcam = ({ camera }) => {
   const [recording, setRecording] = useState(camera.recording);
 
   useEffect(() => {
-    startRecording(camera);
-  }, []);
+    if (recording) {
+      captureFrames(camera);
+    }
+  }, [recording]);
 
   const startRecording = (camera) => {
     camera.recording = true;
     setRecording(camera.recording);
-    captureFrames(camera);
   };
 
   const stopRecording = (camera) => {
@@ -19,22 +20,50 @@ const Webcam = ({ camera }) => {
     setRecording(camera.recording);
   };
 
-  const captureFrames = async (camera) => {
+  const captureFrames = async (camera, fps = 10) => {
     if (!camera.cameraRef.current || !camera.recording) return;
 
-    const imageSrc = camera.cameraRef.current.getScreenshot();
-    if (imageSrc && camera.socket) {
-      const blob = await fetch(imageSrc).then((res) => res.blob());
-      const arrayBuffer = await blob.arrayBuffer();
-      const byteArray = new Uint8Array(arrayBuffer);
-      camera.socket.emit("video_frame", {
-        frame: byteArray,
-        id: camera.id,
-        timestamp: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      });
-    }
+    const frameInterval = 1000 / fps;
 
-    setTimeout(() => captureFrames(camera), 100);
+    const captureAndSendFrame = async () => {
+      if (!camera.cameraRef.current || !camera.recording) return;
+
+      const imageSrc = camera.cameraRef.current.getScreenshot();
+      if (imageSrc && camera.socket) {
+        const blob = await fetch(imageSrc).then((res) => res.blob());
+        const arrayBuffer = await blob.arrayBuffer();
+        const byteArray = new Uint8Array(arrayBuffer);
+        camera.socket.emit("video_frame", {
+          frame: byteArray,
+          id: camera.id,
+          timestamp: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        });
+        console.log("Frame sent");
+      }
+    };
+
+    let lastFrameTime = Date.now();
+
+    const sendFrameLoop = () => {
+      if (!camera.recording) return;
+
+      const now = Date.now();
+      const elapsedTime = now - lastFrameTime;
+
+      // Adjust next frame timing to maintain consistent FPS
+      if (elapsedTime >= frameInterval) {
+        lastFrameTime = now;
+        captureAndSendFrame();
+      }
+
+      // Schedule the next frame with a delay to compensate for processing time
+      setTimeout(
+        sendFrameLoop,
+        Math.max(0, frameInterval - (Date.now() - lastFrameTime))
+      );
+    };
+
+    sendFrameLoop();
   };
 
   return (

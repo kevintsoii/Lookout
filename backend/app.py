@@ -29,19 +29,27 @@ def process_buffer(camera_id):
         length = len(frame_buffer[camera_id]["frames"])
         
         if length > 1:
-            frames = []
+            output_video_path = f"./uploads/{camera_id}-{frame_buffer[camera_id]['updated']}.mp4"
+            first_frame = frame_buffer[camera_id]["frames"][0]
+            height, width, _ = first_frame.shape
+
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            fps = 10
+            video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+
             for _ in range(length):
-               frames.append(frame_buffer[camera_id]["frames"].popleft())
-            
-            output_video_path = f"./uploads/{camera_id}-{int(time.time())}.mp4"
-            asyncio.run(gemini_call(frames))
+                frame = frame_buffer[camera_id]["frames"].popleft()
+                video_writer.write(frame)
+
+            video_writer.release()
+
+            asyncio.run(gemini_call(output_video_path))
     
     if camera_id in frame_buffer:
         timer = Timer(5, process_buffer, [camera_id])
         frame_buffer[camera_id]["timer"] = timer
+        frame_buffer[camera_id]["updated"] = time.time()
         timer.start()
-            
-
 
 
 @socketio.on('connect')
@@ -73,10 +81,11 @@ def handle_end_video(args):
 def handle_video_frame(args):
     camera_id = args["id"]
     frame = args["frame"]
+    print(f'{camera_id} - {frame[:10]}')
 
     global frame_buffer
     if camera_id not in frame_buffer:
-        frame_buffer[camera_id] = {"timer": None, "frames": deque()}
+        frame_buffer[camera_id] = {"timer": None, "updated": None, "frames": deque()}
     
     np_frame = np.frombuffer(frame, dtype=np.uint8)
     img = cv2.imdecode(np_frame, cv2.IMREAD_COLOR)
@@ -86,8 +95,8 @@ def handle_video_frame(args):
         timer = Timer(5, process_buffer, [camera_id])
         timer.start()
         frame_buffer[camera_id]["timer"] = timer
+        frame_buffer[camera_id]["updated"] = time.time()
 
-    print(f'{camera_id} - {frame[:10]}.jpg')
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
