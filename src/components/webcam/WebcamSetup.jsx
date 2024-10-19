@@ -6,16 +6,17 @@ import { Video } from "lucide-react";
 const WebcamCapture = () => {
   /*
     Camera:
-    (index)
     deviceId
     label
     cameraRef
     socket
     recording
+    id
   */
   const [cameras, setCameras] = useState([]);
   const [systemCameras, setSystemCameras] = useState([]);
   const [selected, setSelected] = useState({ label: "", deviceId: "" });
+  const [created, setCreated] = useState(0);
 
   // Fetch video input devices
   useEffect(() => {
@@ -42,6 +43,9 @@ const WebcamCapture = () => {
   const addCamera = () => {
     const newSocket = io("http://localhost:5000", {
       path: "/socket",
+      query: {
+        id: created,
+      },
     });
 
     const newCamera = {
@@ -50,10 +54,12 @@ const WebcamCapture = () => {
       cameraRef: React.createRef(),
       socket: newSocket,
       recording: true,
+      id: created,
     };
     console.log(newCamera);
 
     setCameras((prevCameras) => [...prevCameras, newCamera]);
+    setCreated(created + 1);
   };
 
   const handleSelectChange = (e) => {
@@ -70,7 +76,7 @@ const WebcamCapture = () => {
     <div className="flex flex-col w-full max-h-full items-center">
       {cameras.length > 0 ? (
         cameras.map((camera, index) => (
-          <Webcam key={index} camera={{ ...camera, index }} />
+          <Webcam key={camera.id} camera={{ ...camera, index }} />
         ))
       ) : (
         <Video className="h-32 w-32 text-gray-400 bg-gray-200 min-w-[500px] min-h-[300px]" />
