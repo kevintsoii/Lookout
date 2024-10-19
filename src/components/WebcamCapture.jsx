@@ -3,16 +3,18 @@ import Webcam from "react-webcam";
 import io from "socket.io-client";
 
 const WebcamCapture = () => {
-  const webcamRef = useRef(null);
-  const [recording, setRecording] = useState(false);
   const [socket, setSocket] = useState(null);
 
+  const webcamRef = useRef(null);
+  const [recording, setRecording] = useState(false);
+
+  // Initialize websocket on mount
   useEffect(() => {
-    // Initialize WebSocket connection when component mounts
-    const newSocket = io("http://localhost:5000");
+    const newSocket = io("http://localhost:5000", {
+      path: "/custom_socket_path",
+    });
     setSocket(newSocket);
 
-    // Cleanup on unmount
     return () => newSocket.close();
   }, []);
 
@@ -32,11 +34,11 @@ const WebcamCapture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc && socket) {
       const blob = await fetch(imageSrc).then((res) => res.blob());
-      socket.emit("video_frame", blob);  // Send frame to backend
+      socket.emit("video_frame", blob); // Send frame to backend
     }
 
     // Capture the next frame after a short delay
-    setTimeout(captureFrames, 100);  // Adjust for frame rate
+    setTimeout(captureFrames, 100); // Adjust for frame rate
   };
 
   return (
