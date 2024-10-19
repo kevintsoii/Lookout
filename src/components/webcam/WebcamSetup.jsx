@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Webcam from "./Webcam";
 import { Video, PlusCircle } from "lucide-react";

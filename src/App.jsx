@@ -25,26 +25,6 @@ export default function App() {
     }
   };
 
-  const addCamera = (selected) => {
-    const newSocket = io("http://localhost:5000", {
-      path: "/socket",
-      query: { id: created },
-    });
-
-    const newCamera = {
-      deviceId: selected.deviceId,
-      label: selected.label || `Camera ${selected.deviceId}`,
-      cameraRef: React.createRef(),
-      socket: newSocket,
-      recording: true,
-      id: created,
-    };
-
-    console.log(newCamera);
-    setCameras((prevCameras) => [...prevCameras, newCamera]);
-    setCreated(created + 1);
-  };
-
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       <header className="bg-black text-primary-foreground p-4 shadow-md">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ReactWebcam from "react-webcam";
 
 const Webcam = ({ camera }) => {
