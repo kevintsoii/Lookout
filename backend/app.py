@@ -4,9 +4,14 @@ import threading
 import numpy as np
 import cv2
 from collections import deque
-from flask import Flask, request
-from flask_socketio import SocketIO
 from threading import Timer
+import json
+
+from flask import Flask, request, jsonify
+from flask_socketio import SocketIO
+
+from uagents.query import query
+from uagents import Model
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', path='/socket')
@@ -97,6 +102,35 @@ def handle_video_frame(args):
         frame_buffer[camera_id]["timer"] = timer
         frame_buffer[camera_id]["updated"] = time.time()
 
+
+
+# AGENTS
+
+AGENT_ADDRESS = "agent1qgpagptgy525qxnl20383gphrf42wctpw5hg6h0lsajtte9w4zl2qgumtgv"
+
+
+class Request(Model):
+    file_path: str
+
+def agent_query(req):
+    # Synchronous call to agent
+    response = query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
+    data = json.loads(response.decode_payload())
+    command = data["text"]
+    return command
+
+@app.route("/command", methods=["POST"])
+def make_agent_call():
+    try:
+        req = {"file_path": "/Users/marvinzhai/Desktop/videos/threat.mp4"}
+        res = agent_query(req)
+        return jsonify(f"successful call - agent response: {res}")
+    except Exception as e:
+        return jsonify(f"unsuccessful agent call - {str(e)}"), 500
+
+
+
+# MAIN
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
