@@ -116,17 +116,18 @@ def agent_query(req):
     # Synchronous call to agent
     response = query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
     data = json.loads(response.decode_payload())
-    command = data["text"]
-    return command
+    return  data.get  ("response",  "No data found")
 
 @app.route("/command", methods=["POST"])
-def make_agent_call():
+async def make_agent_call(req: Request):
     try:
-        req = {"file_path": "/Users/marvinzhai/Desktop/videos/threat.mp4"}
-        res = agent_query(req)
-        return jsonify(f"successful call - agent response: {res}")
+        response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
+        # Decode the response and extract data
+        data = json.loads(response.decode_payload())
+        return data.get("response", "No data found")
     except Exception as e:
-        return jsonify(f"unsuccessful agent call - {str(e)}"), 500
+        # Return a formatted error message if the agent call fails
+        return f"Unsuccessful agent call - {str(e)}"
 
 
 
