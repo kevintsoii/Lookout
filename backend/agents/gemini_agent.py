@@ -29,6 +29,39 @@ def upload_file_data(file_data):
         else:
             raise ValueError("File upload failed. No URI returned.")
     
+# function to create specific prompt; values = features that user specified to look out for
+# might have to change to update_prompt later on in during agent development, include a default prompt variable
+# need to add retrieving the features list using flask
+def get_prompt(values: list):
+    prompt = 'Return one specific version of this prompt based on this current prompt: "You are an AI camera, report if there is any {}."'.format(
+        ", ".join(values) if values else "none"
+    )
+    prompt += "Make note of where these incidents occur. Please make sure to return only the prompt."
+
+    # Initialize the generative model
+    gemini = genai.GenerativeModel("gemini-1.5-flash")
+
+    generation_config = {
+        "temperature": 0.3,
+        "top_p": 0.9,
+        "top_k": 50,
+        "max_output_tokens": 150,
+        "response_mime_type": "text/plain",
+    }
+
+
+    # Generate the more specific prompt using the model
+    response = gemini.generate_content(
+        prompt, 
+        generation_config= generation_config, 
+        safety_settings={},
+        stream=False,)
+    generated_prompt = ""
+    for candidate in response.candidates:
+        generated_prompt += candidate.content.parts[0].text
+
+    return generated_prompt
+    
     
 
 def send_video_to_api():
@@ -47,11 +80,11 @@ def send_video_to_api():
 
     # Create the gemini model
     generation_config = {
-    "temperature": 1,
-    "top_p": 0.95,
-    "top_k": 64,
-    "max_output_tokens": 8192,
-    "response_mime_type": "text/plain",
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 64,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
     }
 
     # Prepare the content with the video and prompt
@@ -80,10 +113,12 @@ def send_video_to_api():
 
     # with open('gemini_response.json','w') as response_file:
     #     json.dump(response_text, response_file)
-
+ 
   
 
-send_video_to_api()
+# send_video_to_api()
+
+get_prompt(["fire", "gun", "suspicious people"])
 
 
 #video_agent = Agent(name="video_agent")
