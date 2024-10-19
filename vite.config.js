@@ -10,4 +10,7 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  server: {
+    port: 5000, // Specify your desired port here
+  },
 });
