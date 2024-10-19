@@ -28,7 +28,7 @@ def process_buffer(camera_id):
     if camera_id in frame_buffer:
         length = len(frame_buffer[camera_id]["frames"])
         
-        if length > 0:
+        if length > 1:
             frames = []
             for _ in range(length):
                frames.append(frame_buffer[camera_id]["frames"].popleft())
