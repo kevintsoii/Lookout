@@ -16,15 +16,18 @@ const FeatureList = ({
     }
   };
   return (
-    <div className="w-1/4 p-4 bg-white shadow-md overflow-y-auto flex flex-col rounded-xl  ">
-      <h2 className="text-2xl font-bold mb-4 text-center">Features</h2>
+    <div className="w-1/4 p-4 overflow-y-auto flex flex-col rounded-xl bg-gradient-to-br from-black to-gray-900 backdrop-blur-lg shadow-lg border border-gray-700 ">
+      <div class="absolute inset-0 rounded-xl border-[1px] border-transparent bg-gradient-to-br from-white/10 to-transparent opacity-10 blur-lg pointer-events-none"></div>
+      <h2 className="text-2xl text-white font-bold mb-4 text-center">
+        Features
+      </h2>
 
       <ul className="space-y-2 mb-4 flex-grow">
         <AnimatePresence>
           {features.map((feature, index) => (
             <motion.li
               key={index}
-              initial={{ opacity: 0, y: -20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
@@ -32,7 +35,7 @@ const FeatureList = ({
             >
               <div className="flex items-center space-x-2 flex-grow">
                 <AlertTriangle className="text-yellow-500" />
-                <span>{feature}</span>
+                <span className="text-white">{feature}</span>
               </div>
               <X
                 className="text-red-500"
@@ -53,7 +56,7 @@ const FeatureList = ({
         />
         <Button
           onClick={addFeature}
-          className="w-full flex items-center justify-center text-xl border-2 active:scale-95 hover:bg-white hover:text-black hover:border-black"
+          className="w-full flex items-center justify-center text-xl border active:scale-95 rounded-full bg-gradient-to-br from-gray-800 to-black backdrop-blur-lg shadow-lg border-gray-900 hover:text-white hover:border-gray-700 mt-2 "
         >
           <PlusCircle className="mr-2 h-5 w-5" />
           <span>Add Feature</span>

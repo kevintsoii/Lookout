@@ -3,8 +3,9 @@ import { Card, CardContent } from "./card";
 
 const LogsColumn = ({ logs }) => {
   return (
-    <div className="w-1/4 p-4 bg-white shadow-md overflow-y-auto rounded-xl">
-      <h2 className="text-2xl font-bold mb-4 text-center">Logs</h2>
+    <div className="w-1/4 p-4 bg-gradient-to-br from-black to-gray-900 backdrop-blur-lg shadow-lg border border-gray-700 overflow-y-auto rounded-xl">
+      <div class="absolute inset-0 rounded-xl border-[1px] border-transparent bg-gradient-to-br from-white/10 to-transparent opacity-10 blur-lg pointer-events-none"></div>
+      <h2 className="text-2xl text-white font-bold mb-4 text-center">Logs</h2>
       <div className="space-y-2">
         {logs.map((log) => (
           <Card

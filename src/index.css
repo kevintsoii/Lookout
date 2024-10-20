@@ -23,3 +23,36 @@
   background: rgba(128, 128, 128, 0.7);
 }
 
+
+@keyframes move-line {
+  100% {
+    background-position: 200% 0;
+  }
+  0% {
+    background-position: 0% 0;
+  }
+  
+}
+
+.neon-line {
+  background-size: 200% 100%; /* Move over twice the width */
+  animation: move-line 3s linear infinite; /* Infinite animation */
+}
+
+
+@layer utilities {
+  @keyframes fade-in {
+    0% {
+      border-bottom-width: 0;
+      opacity:0;
+    }
+    100% {
+      border-bottom-width: 1px;
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-in;
+  }
+}
