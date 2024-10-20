@@ -45,14 +45,14 @@ export default function LookoutPage() {
         <div className="space-x-2">
           <Button
             variant="outline"
-            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110" 
+            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-200 transform hover:scale-110" 
             onClick={goToHomePage}
           >
             Home
           </Button>
           <Button
             variant="outline"
-            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110" 
+            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-200 transform hover:scale-110" 
           >
             Sign Up
           </Button>

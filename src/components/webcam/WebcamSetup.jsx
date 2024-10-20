@@ -102,7 +102,7 @@ const WebcamCapture = () => {
         </select>
 
         <Button
-          className="w-full flex items-center justify-center active:scale-95 mb-6"
+          className="w-full flex items-center justify-center text-xl border-2 active:scale-95 hover:bg-white hover:text-black hover:border-black"
           onClick={addCamera}
           disabled={!selected?.deviceId}
         >

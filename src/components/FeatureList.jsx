@@ -24,7 +24,7 @@ const FeatureList = ({ features, newFeature, setNewFeature, addFeature }) => {
         />
         <Button
           onClick={addFeature}
-          className="w-full flex items-center justify-center text-xl active:scale-95"
+          className="w-full flex items-center justify-center text-xl border-2 active:scale-95 hover:bg-white hover:text-black hover:border-black"
         >
           <PlusCircle className="mr-2 h-5 w-5" />
           <span>Add Feature</span>
