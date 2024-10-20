@@ -2,6 +2,7 @@ import os, time, asyncio
 import shutil
 import threading
 import numpy as np
+import requests
 import cv2
 from collections import deque
 from threading import Timer
@@ -13,14 +14,19 @@ from flask_socketio import SocketIO
 from uagents.query import query
 from uagents import Model
 
+
+VIDEO_ANALYZER_ADDRESS = "agent1qt8r5gxe6q4pyfyg0cf0lz83g7f5zw6787y3ts0ps87qcx9uq3fg78taj5q"
+
+
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', path='/socket')
 
 
 UPLOAD_FOLDER = './uploads'
-if os.path.exists(UPLOAD_FOLDER):
-    shutil.rmtree(UPLOAD_FOLDER)
-os.makedirs(UPLOAD_FOLDER)
+#if os.path.exists(UPLOAD_FOLDER):
+#    shutil.rmtree(UPLOAD_FOLDER)
+#os.makedirs(UPLOAD_FOLDER)
 
 
 frame_buffer = {}
@@ -104,30 +110,12 @@ def handle_video_frame(args):
 
 
 
-# AGENTS
-
-AGENT_ADDRESS = "agent1qgpagptgy525qxnl20383gphrf42wctpw5hg6h0lsajtte9w4zl2qgumtgv"
-
-
 class Request(Model):
     file_path: str
 
-def agent_query(req):
-    # Synchronous call to agent
-    response = query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
-    data = json.loads(response.decode_payload())
-    return  data.get  ("response",  "No data found")
-
-@app.route("/command", methods=["POST"])
-async def make_agent_call(req: Request):
-    try:
-        response = await query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
-        # Decode the response and extract data
-        data = json.loads(response.decode_payload())
-        return data.get("response", "No data found")
-    except Exception as e:
-        # Return a formatted error message if the agent call fails
-        return f"Unsuccessful agent call - {str(e)}"
+@app.route("/test", methods=["GET"])
+async def test():
+    return requests.post('http://localhost:5001/analysis', json={"file_path": r"backend\0-1729384806.5118058.mp4"}).text
 
 
 
