@@ -115,9 +115,21 @@ def handle_video_frame(args):
         frame_buffer[camera_id]["updated"] = time.time()
 
 
+# Sample logs to demonstrate. Replace this logic with dynamic threat detection logic.
+logs = [
+    {"id": 1, "status": "danger", "message": "Suspicious movement detected"},
+    {"id": 2, "status": "danger", "message": "Unidentified object spotted"}
+]
 
+# endpoint for logs 
+@app.route("/api/logs", methods=["GET"])
+def get_logs():
+    # Here you can retrieve or process logs dynamically (e.g., from your video analyzer)
+    return jsonify(logs)
 class Request(Model):
     file_path: str
+
+
 
 '''
 REST API
