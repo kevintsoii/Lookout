@@ -31,7 +31,7 @@ model = genai.GenerativeModel(
 )
 
 def upload_file(file_path):
-    video_file = genai.upload_file(path=file_path)
+    video_file = genai.upload_file(path=file_path) 
     while video_file.state.name == "PROCESSING":
         time.sleep(4)
         video_file = genai.get_file(video_file.name)
