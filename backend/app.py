@@ -9,6 +9,7 @@ from threading import Timer
 import json
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_socketio import SocketIO
 
 from uagents.query import query
@@ -20,16 +21,18 @@ VIDEO_ANALYZER_ADDRESS = "agent1qt8r5gxe6q4pyfyg0cf0lz83g7f5zw6787y3ts0ps87qcx9u
 
 
 app = Flask(__name__)
+CORS(app) 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', path='/socket')
 
 
 UPLOAD_FOLDER = './uploads'
-#if os.path.exists(UPLOAD_FOLDER):
-#    shutil.rmtree(UPLOAD_FOLDER)
-#os.makedirs(UPLOAD_FOLDER)
+if os.path.exists(UPLOAD_FOLDER):
+   shutil.rmtree(UPLOAD_FOLDER) #deletes folder and its contents
+os.makedirs(UPLOAD_FOLDER) # remakes folder
 
 
 frame_buffer = {}
+
 
 async def gemini_call(file_path):
     print(file_path)
@@ -68,6 +71,13 @@ def process_buffer(camera_id):
         frame_buffer[camera_id]["updated"] = time.time()
         timer.start()
 
+#cors
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    return response
 
 @socketio.on('connect')
 def handle_connect():
@@ -142,4 +152,5 @@ async def test():
 # MAIN
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, port=5050)
+    
