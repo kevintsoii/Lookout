@@ -85,9 +85,9 @@ const WebcamCapture = () => {
         </div>
       )}
 
-      <div className=" sticky  bottom-0 left-0 pt-3 border-gray-400 border-t bg-white flex flex-col w-full items-center mt-4 gap-3">
+      <div className=" sticky  bottom-0 left-0 pt-3 border-gray-300 border-t bg-white flex flex-col w-full items-center mt-4 gap-3">
         <select
-          className= "w-96 border-gray-400 border active:border-black py-2 pl-2 w-full"
+          className="w-96 border-gray-400 border active:border-black py-2 pl-2 w-full"
           onChange={handleSelectChange}
           value={selected.deviceId || ""}
         >
@@ -102,7 +102,7 @@ const WebcamCapture = () => {
         </select>
 
         <Button
-          className="w-full flex items-center justify-center text-xl border-2 active:scale-95 hover:bg-white hover:text-black hover:border-black"
+          className="w-full flex items-center justify-center text-xl border-2 mb-4 active:scale-95 hover:bg-white hover:text-black hover:border-black"
           onClick={addCamera}
           disabled={!selected?.deviceId}
         >

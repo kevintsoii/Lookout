@@ -30,7 +30,7 @@ const FeatureList = ({
               transition={{ duration: 0.3 }}
               className="mb-2 flex items-center justify-between space-x-2"
             >
-              <div className="flex items-center space-x-2 flex-grow">
+              <div className="flex items-center space-x-2 flex-grow  text-lg">
                 <AlertTriangle className="text-yellow-500" />
                 <span>{feature}</span>
               </div>
