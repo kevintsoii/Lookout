@@ -7,15 +7,16 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
-from uagents import Agent, Context, Model
+from uagents import Agent, Context, Model, Bureau
 from uagents.query import query
 from uagents.setup import fund_agent_if_low
 
 
-
 load_dotenv()
 
+# Gemini Config
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+
 generation_config = {
   "temperature": 1,
   "top_p": 0.95,
@@ -23,6 +24,7 @@ generation_config = {
   "max_output_tokens": 8192,
   "response_mime_type": "text/plain",
 }
+
 model = genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   generation_config=generation_config,
@@ -51,13 +53,13 @@ def upload_file(file_path):
     video_file.delete()
     return response.text
 
+# Fetch AI config
 
 class Request(Model):
     file_path: str
 
 class Response(Model):
     text: str
-
 
 video_analyzer = Agent(
     name="video_analyzer",
@@ -73,23 +75,29 @@ async def introduce_agent(ctx: Context):
     ctx.logger.info(f"Hello, I'm agent {video_analyzer.name} and my address is {video_analyzer.address}.") 
     # agent1qt8r5gxe6q4pyfyg0cf0lz83g7f5zw6787y3ts0ps87qcx9uq3fg78taj5q
 
-@video_analyzer.on_query(model=Request, replies={Response})
-async def query_handler(ctx: Context, sender: str, _query: Request):
-    file_path = _query.file_path
-    ctx.logger.info("Received file path: {file_path}")
+@video_analyzer.on_rest_post("/analysis", Request, Response)
+async def handle_post(ctx: Context, req: Request) -> Response:
+    ctx.logger.info(f"Video Analysis - {req.file_path}")
+    response = upload_file(req.file_path)
+    ctx.logger.info(f"{req.file_path} - {response[-10:]}")
     return Response(
-        text=upload_file(file_path)
+        text=response
     )
 
 '''
-REST API version
-@video_analyzer.on_rest_post("/analysis", Request, Response)
-async def handle_post(ctx: Context, req: Request) -> Response:
-    ctx.logger.info("Received POST request")
+@video_analyzer.on_query(model=Request, replies={Response})
+async def query_handler(ctx: Context, sender: str, _query: Request):
+    file_path = _query.file_path
+    ctx.logger.info(f"Received file path: {file_path}")
+    resp = upload_file(file_path)
+    ctx.logger.info(f"Response: {resp[:10]}")
     return Response(
-        text=upload_file(req.file_path)
+        text=resp
     )
 '''
+
+bureau = Bureau(port=5001)
+bureau.add(video_analyzer)
 
 if __name__ == "__main__":
     video_analyzer.run()

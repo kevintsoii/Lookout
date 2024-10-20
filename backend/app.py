@@ -24,18 +24,17 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', path='
 
 
 UPLOAD_FOLDER = './uploads'
-#if os.path.exists(UPLOAD_FOLDER):
-#    shutil.rmtree(UPLOAD_FOLDER)
-#os.makedirs(UPLOAD_FOLDER)
+if os.path.exists(UPLOAD_FOLDER):
+    shutil.rmtree(UPLOAD_FOLDER)
+os.makedirs(UPLOAD_FOLDER)
 
 
 frame_buffer = {}
 
-async def gemini_call(file_path):
-    print(file_path)
+def gemini_call(file_path):
     try:
-        response = await query(destination=VIDEO_ANALYZER_ADDRESS, message=Request(file_path=r'backend\0-1729384806.5118058.mp4'), timeout=15.0)
-        return str(response)
+        requests.post(f'http://127.0.0.1:5001/analysis', json={"file_path": file_path})
+        print('passed', file_path)
     except Exception as e:
         print("ERROR", e)
 
@@ -47,6 +46,7 @@ def process_buffer(camera_id):
         
         if length > 1:
             output_video_path = f"./uploads/{camera_id}-{frame_buffer[camera_id]['updated']}.mp4"
+            print(length, output_video_path)
             first_frame = frame_buffer[camera_id]["frames"][0]
             height, width, _ = first_frame.shape
 
@@ -60,7 +60,7 @@ def process_buffer(camera_id):
 
             video_writer.release()
 
-            asyncio.run(gemini_call(output_video_path))
+            threading.Thread(target=gemini_call, args=(output_video_path,)).start()
     
     if camera_id in frame_buffer:
         timer = Timer(5, process_buffer, [camera_id])
@@ -98,7 +98,7 @@ def handle_end_video(args):
 def handle_video_frame(args):
     camera_id = args["id"]
     frame = args["frame"]
-    print(f'{camera_id} - {frame[:10]}')
+    #print(f'{camera_id} - {frame[-10:]}')
 
     global frame_buffer
     if camera_id not in frame_buffer:
