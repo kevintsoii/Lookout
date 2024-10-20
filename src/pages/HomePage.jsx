@@ -2,6 +2,8 @@
 import { Button } from "../components/button"; // Adjust the path if necessary
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import EyeBalls from "@/components/eyeball/eyeball";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -12,8 +14,13 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-200 to-gray-700 text-primary-foreground">
-      <header className="p-4 flex justify-between items-center">
+    <div className="min-h-screen bg-gradient-to-b from-stone-200 to-gray-700 text-primary-foreground ">
+      <motion.header
+        className="p-4 flex justify-between items-center"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="flex items-center space-x-2">
           <Eye className="h-8 w-8" />
           <span className="text-2xl font-bold">Lookout</span>
@@ -32,11 +39,17 @@ export default function HomePage() {
             Sign Up
           </Button>
         </div>
-      </header>
-      <main className="flex flex-col items-center justify-center h-[calc(100vh-80px)]">
-        <h1 className="text-6xl font-bold mb-8 text-center">
-          {" "}
-          Stay on the Lookout{" "}
+      </motion.header>
+
+      <motion.main
+        className="flex flex-col items-center justify-center h-[calc(100vh-80px)] "
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <EyeBalls />
+        <h1 className="data text-6xl font-bold text-center pt-12 pb-8">
+          Stay on the Lookout
         </h1>
         <p className="text-2xl mb-8 text-center max-w-2xl">
           Protect what matters most with our advanced AI-powered surveillance
@@ -49,7 +62,7 @@ export default function HomePage() {
         >
           Try Demo
         </Button>
-      </main>
+      </motion.main>
     </div>
   );
 }
