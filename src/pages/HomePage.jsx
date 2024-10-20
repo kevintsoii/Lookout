@@ -45,7 +45,7 @@ export default function HomePage() {
           size="lg"
           onClick={goToLookoutPage}
         >
-          Get Started
+          Try Demo
         </Button>
       </main>
     </div>

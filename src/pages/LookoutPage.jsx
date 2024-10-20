@@ -28,6 +28,10 @@ export default function LookoutPage() {
     }
   };
 
+  const removeFeature = (featureToRemove) => {
+    setFeatures(features.filter(feature => feature !== featureToRemove));
+  };
+
   const navigate = useNavigate();
 
   // Function to handle the button click
@@ -65,6 +69,7 @@ export default function LookoutPage() {
           newFeature={newFeature}
           setNewFeature={setNewFeature}
           addFeature={addFeature}
+          removeFeature={removeFeature}
         />
 
         <div className="w-1/2 p-4 overflow-y-auto rounded-md">
