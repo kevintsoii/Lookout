@@ -182,12 +182,17 @@ def delete_logs():
 @app.route('/api/logs', methods=['POST'])
 def add_log():
     data = request.json  # Get data from React frontend
-    new_log = {
-        "_id": data['_id'],
-        "severity": data['severity'],
-        "description": data['description']
-    }
-    logs_collection.insert_one(new_log)
+
+    ts = data["ts"]
+    for feature in data:
+        if feature != "ts":
+            new_log = {
+                "ts": ts,
+                "severity": data[feature]['severity'],
+                "description": data[feature]['description']
+            }
+            logs_collection.insert_one(new_log)
+  
     return jsonify({"message": "User added successfully"}), 201
 
 

@@ -1,7 +1,7 @@
 import os
 import json
 import pathlib
-import time
+import time, requests
 from dotenv import load_dotenv
 
 import google.generativeai as genai
@@ -53,11 +53,11 @@ def upload_file(prompt, file_path):
             }
         )
     video_file.delete()
-    print(f">>>>>>>>>>>{response.text}<<<<<<<<<<")
-    return response.text
+
+    return response.text.replace('```json','').replace('```','').strip()
 
 def create_prompt(old_prompt, prompt_items):
-    response = model.generate_content("You are an AI prompt builder for a security camera surveillance system. Your job is to update a given prompt for the AI to analyze security camera footage provided as a mp4 and make sure it is aware of its role. You will be given a list of irregularities (items or situations) to detect, such as fire or weapons. Given an old prompt, create a new prompt consisting of only the irregularities listed so that the AI will return a dictionary containing keys of irregularities that are present in the video, and other wise an empty dictionary. If it can't be determined then return empty dictionary. It will only return a dictionary text and nothing else. Dictionary entries should contain the irregularity as key, and the value should contain another dictionary with severity of 1 or 2 (highest) and a short description of what and where it is happening. For each irregularity also give a brief explanation to help the camera system. Here is the old prompt: <" + old_prompt + ">. Here is the list of items or situations, ignore any non-english words: " + str(prompt_items))
+    response = model.generate_content("You are an AI prompt builder for a security camera surveillance system. Your job is to return an updated prompt to make an AI video camera  analyze security camera footage provided as a mp4 and make sure it is aware of its role. You will be given a list of irregularities (items or situations) to detect, such as fire or weapons. Given an old prompt, create a new prompt consisting of only the irregularities listed so that the AI will return a dictionary containing keys of irregularities that are present in the video, and other wise if there is no irregularity, return an empty dictionary. If it can't be determined then return empty dictionary. It will only return a dictionary text and nothing else. Dictionary entries should contain the irregularity as key, and the value should contain another dictionary with severity of 1 or 2 (highest) and a short description of what and where it is happening. For each irregularity also give a brief explanation to help the camera system. Here is the old prompt: <" + old_prompt + ">. Here is the list of items or situations, ignore any non-english words: " + str(prompt_items))
     return response.text
 
 # Fetch AI config
@@ -110,7 +110,18 @@ async def introduce_agent(ctx: Context):
 async def analyze_video(ctx: Context, req: Request) -> Response:
     ctx.logger.info(f"Video Analysis - {req.file_path}")
     response = upload_file(current_prompt, req.file_path)
-    print(response)
+    
+    try: response_json = json.loads(response)
+    except: response_json = {}
+
+    print(response_json)
+
+    ts = int(req.file_path.split('-')[-1].split('.')[0])
+
+    if response_json:
+        response_json["ts"] = ts
+        requests.post('http://localhost:5050/api/logs', json=response_json)
+
     return Response(
         text=response
     )

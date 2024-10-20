@@ -4,7 +4,7 @@ import { Card, CardContent } from "./card";
 
 const LogsColumn = () => {
   const [logs, setLogs] = useState([
-    { id: 0, status: "clear", message: "All clear" },
+    { _id: -1, ts: 0, severity: "clear", description: "All clear" },
   ]);
 
   const fetchThreatLogs = async () => {
@@ -13,9 +13,12 @@ const LogsColumn = () => {
       const data = await response.json();
 
       if (data && data.length > 0) {
+        console.log(data);
         setLogs(data); // Replace "All clear" with actual logs if threats exist
       } else {
-        setLogs([{ id: 0, status: "clear", message: "All clear" }]);
+        setLogs([
+          { _id: -1, ts: 0, severity: "clear", description: "All clear" },
+        ]);
       }
     } catch (error) {
       console.error("Error fetching logs:", error);
@@ -30,7 +33,9 @@ const LogsColumn = () => {
 
       if (response.ok) {
         console.log("Logs deleted successfully");
-        setLogs([{ id: 0, status: "clear", message: "All clear" }]);
+        setLogs([
+          { _id: -1, ts: 0, severity: "clear", description: "All clear" },
+        ]);
       } else {
         console.error("Failed to delete logs");
       }
@@ -52,24 +57,24 @@ const LogsColumn = () => {
       <div className="space-y-2">
         {logs.map((log) => (
           <Card
-            key={log.id}
+            key={log._id}
             className={`rounded-xl shadow-lg text-lg transition-transform transform hover:scale-105 hover:shadow-2xl ${
-              log.status === "danger"
+              log.severity === 2
                 ? "border-red-500 bg-red-300"
-                : log.status === "warning"
+                : log.severity === 1
                 ? "border-yellow-500 bg-yellow-300"
                 : "border-green-500 bg-green-300"
             }`}
           >
             <CardContent className="flex items-center p-2">
-              {log.status === "danger" ? (
+              {log.severity === 2 ? (
                 <AlertTriangle className="text-red-500 mr-2" />
-              ) : log.status === "warning" ? (
+              ) : log.severity === 1 ? (
                 <AlertCircle className="text-yellow-500 mr-2" />
               ) : (
                 <CheckCircle className="text-green-500 mr-2" />
               )}
-              <span>{log.message}</span>
+              <span>{log.description}</span>
             </CardContent>
           </Card>
         ))}
