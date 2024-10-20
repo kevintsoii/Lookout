@@ -2,7 +2,7 @@ import { AlertTriangle, PlusCircle, X } from "lucide-react";
 import { Input } from "./input";
 import { Button } from "./button";
 
-const FeatureList = ({ features, newFeature, setNewFeature, addFeature, removeFeature }) => {
+const FeatureList = ({ features, newFeature, setNewFeature, addFeature, removeFeature, getFeatureList }) => {
   return (
     <div className="w-1/4 p-4 bg-white shadow-md overflow-y-auto flex flex-col rounded-xl">
       <h2 className="text-2xl font-bold mb-4 text-center">Features</h2>

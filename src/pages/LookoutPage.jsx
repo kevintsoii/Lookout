@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle } from "../components/card";
 import FeatureList from "../components/FeatureList";
 import LogsColumn from "../components/LogsColumn";
@@ -31,12 +31,41 @@ export default function LookoutPage() {
     setFeatures(features.filter((feature) => feature !== featureToRemove));
   };
 
+  const getFeatureList = () => {
+    console.log("Current feature list:", features);
+    return features; // This will return the current features
+  };
+
   const navigate = useNavigate();
 
   // Function to handle the button click
   const goToHomePage = () => {
     navigate("/"); // Navigate to the home page
   };
+
+  const [currentTime, setCurrentTime] = useState("");
+
+  const updateTime = () => {
+    const now = new Date();
+    const options = { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit', 
+      month: '2-digit', 
+      day: '2-digit', 
+      year: 'numeric', 
+      timeZoneName: 'short' 
+    };
+    const formattedTime = now.toLocaleString('en-US', options);
+    setCurrentTime(formattedTime);
+  };
+
+  // Set interval to update the time every second
+  useEffect(() => {
+    updateTime(); // Initial time set
+    const timer = setInterval(updateTime, 1000); // Update every second
+    return () => clearInterval(timer); // Cleanup interval on unmount
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
@@ -69,6 +98,7 @@ export default function LookoutPage() {
           setNewFeature={setNewFeature}
           addFeature={addFeature}
           removeFeature={removeFeature}
+          getFeatureList={getFeatureList}
         />
 
         <div className="w-1/2 p-4 overflow-y-auto rounded-md">
@@ -76,6 +106,7 @@ export default function LookoutPage() {
             <CardHeader>
               <CardTitle>Live Video Feed</CardTitle>
             </CardHeader>
+            <div className="mt-4 text-base font-semibold text-red-800/70 flex justify-center items-center"> {currentTime} </div>
 
             <div className="custom-scrollbar overflow-x-hidden grow flex flex-col px-12 w-full text-xl justify-center items-center rounded-md">
               <WebcamCapture />

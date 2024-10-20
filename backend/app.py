@@ -39,6 +39,9 @@ async def gemini_call(file_path):
     except Exception as e:
         print("ERROR", e)
 
+# Global variable to hold features
+features = []
+
 
 def process_buffer(camera_id):
     global frame_buffer
@@ -126,6 +129,28 @@ async def test():
     print('starting test')
     return requests.post('http://localhost:5001/analysis', json={"file_path": r"backend\0-1729384806.5118058.mp4"}).text
 '''
+def agent_query(req):
+    # Synchronous call to agent
+    response = query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
+    data = json.loads(response.decode_payload())
+    command = data["text"]
+    return command
+
+@app.route("/command", methods=["POST"])
+def make_agent_call():
+    try:
+        req = {"file_path": "/Users/marvinzhai/Desktop/videos/threat.mp4"}
+        res = agent_query(req)
+        return jsonify(f"successful call - agent response: {res}")
+    except Exception as e:
+        return jsonify(f"unsuccessful agent call - {str(e)}"), 500
+
+# New endpoint to get the feature list
+@app.route("/features", methods=["GET"])
+def get_features():
+    features = jsonify(features)
+    return features
+
 
 # MAIN
 
