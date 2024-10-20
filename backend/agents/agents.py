@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import json
 import pathlib
@@ -114,9 +115,10 @@ async def analyze_video(ctx: Context, req: Request) -> Response:
     try: response_json = json.loads(response)
     except: response_json = {}
 
-    print(response_json)
 
     ts = int(req.file_path.split('-')[-1].split('.')[0])
+    date_str = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print(date_str, response_json)
 
     if response_json:
         response_json["ts"] = ts

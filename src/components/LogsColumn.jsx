@@ -2,9 +2,16 @@ import { useState, useEffect } from "react";
 import { AlertTriangle, CheckCircle, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "./card";
 
+const initialTimestamp = new Date().toLocaleString();
+
 const LogsColumn = () => {
   const [logs, setLogs] = useState([
-    { _id: -1, ts: new Date().toLocaleString(), severity: "clear", description: "All clear" },
+    {
+      _id: -1,
+      ts: initialTimestamp,
+      severity: "clear",
+      description: "All clear",
+    },
   ]);
 
   const fetchThreatLogs = async () => {
@@ -15,13 +22,18 @@ const LogsColumn = () => {
       if (data && data.length > 0) {
         const newLogs = data.map((log) => ({
           ...log,
-          ts: new Date().toLocaleString(), // Assign current timestamp
+          ts: initialTimestamp, // Assign current timestamp
         }));
 
         setLogs((prevLogs) => [...newLogs, ...prevLogs].slice(0, 8)); // Prepend new logs
       } else {
         setLogs([
-          { _id: -1, ts: new Date().toLocaleString(), severity: "clear", description: "All clear" },
+          {
+            _id: -1,
+            ts: initialTimestamp,
+            severity: "clear",
+            description: "All clear",
+          },
         ]);
       }
     } catch (error) {
@@ -38,7 +50,12 @@ const LogsColumn = () => {
       if (response.ok) {
         console.log("Logs deleted successfully");
         setLogs([
-          { _id: -1, ts: new Date().toLocaleString(), severity: "clear", description: "All clear" },
+          {
+            _id: -1,
+            ts: initialTimestamp,
+            severity: "clear",
+            description: "All clear",
+          },
         ]);
       } else {
         console.error("Failed to delete logs");
@@ -51,8 +68,8 @@ const LogsColumn = () => {
   useEffect(() => {
     deleteLogs();
     fetchThreatLogs();
-    const interval = setInterval(fetchThreatLogs, 1000); 
-    return () => clearInterval(interval); 
+    const interval = setInterval(fetchThreatLogs, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -73,11 +90,20 @@ const LogsColumn = () => {
             <CardContent className="flex items-center p-2 flex-shrink-0">
               <div className="flex-shrink-0">
                 {log.severity === 3 ? (
-                  <AlertTriangle className="text-red-500" style={{ width: "24px", height: "24px" }} />
+                  <AlertTriangle
+                    className="text-red-500"
+                    style={{ width: "24px", height: "24px" }}
+                  />
                 ) : log.severity === 2 ? (
-                  <AlertCircle className="text-yellow-500" style={{ width: "24px", height: "24px" }} />
+                  <AlertCircle
+                    className="text-yellow-500"
+                    style={{ width: "24px", height: "24px" }}
+                  />
                 ) : (
-                  <CheckCircle className="text-green-500" style={{ width: "24px", height: "24px" }} />
+                  <CheckCircle
+                    className="text-green-500"
+                    style={{ width: "24px", height: "24px" }}
+                  />
                 )}
               </div>
               <div className="pl-4 flex flex-col">
