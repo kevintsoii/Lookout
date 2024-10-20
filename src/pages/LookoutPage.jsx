@@ -3,15 +3,16 @@ import { Card, CardHeader, CardTitle } from "../components/card";
 import FeatureList from "../components/FeatureList";
 import LogsColumn from "../components/LogsColumn";
 import WebcamCapture from "../components/webcam/WebcamSetup";
-import { Button } from "../components/button"; // Adjust the path if necessary
+import { Button } from "../components/button"; 
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";  
 
 export default function LookoutPage() {
   const [features, setFeatures] = useState([
     "Suspicious movement",
     "Unidentified objects",
-    "Unauthorized access",
+    "Unauthorized access"
   ]);
   const [newFeature, setNewFeature] = useState("");
   const [logs] = useState([
@@ -19,29 +20,42 @@ export default function LookoutPage() {
     { id: 2, message: "Suspicious movement detected", status: "danger" },
     { id: 3, message: "Unidentified object spotted", status: "danger" },
   ]);
+  
+  // FEATURE LIST FUNCTIONS
+  const sendFeatures = (featuresToSend) => {
+    // Sending data to Flask API
+    axios.post('http://127.0.0.1:5000/features', featuresToSend)
+        .then(response => {
+            console.log("Response from server:", response.data);
+        })
+        .catch(error => {
+            console.error("There was an error sending features!", error);
+        });
+  };
 
   const addFeature = () => {
     if (newFeature.trim()) {
-      setFeatures([...features, newFeature]);
+      const updatedFeatures = [...features, newFeature];
+      setFeatures(updatedFeatures);
       setNewFeature("");
+      sendFeatures(updatedFeatures); // Send updated features
     }
   };
 
   const removeFeature = (featureToRemove) => {
-    setFeatures(features.filter((feature) => feature !== featureToRemove));
+    const updatedFeatures = features.filter((feature) => feature !== featureToRemove);
+    setFeatures(updatedFeatures);
+    sendFeatures(updatedFeatures); // Send updated features
   };
 
-  const getFeatureList = () => {
-    console.log("Current feature list:", features);
-    return features; // This will return the current features
-  };
-
+  // PAGE NAVIGATION
   const navigate = useNavigate();
 
-  // Function to handle the button click
   const goToHomePage = () => {
     navigate("/"); // Navigate to the home page
   };
+
+  // TIME
 
   const [currentTime, setCurrentTime] = useState("");
 
@@ -60,8 +74,18 @@ export default function LookoutPage() {
     setCurrentTime(formattedTime);
   };
 
-  // Set interval to update the time every second
   useEffect(() => {
+    // Fetch the feature list from the Flask backend on component mount
+    axios.get('http://127.0.0.1:5000/features')  // Adjust the URL if necessary
+      .then((response) => {
+        setFeatures(response.data);  // Set the fetched features to the state
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the feature list!", error);
+      });
+    
+
+    // Set interval to update the time every second
     updateTime(); // Initial time set
     const timer = setInterval(updateTime, 1000); // Update every second
     return () => clearInterval(timer); // Cleanup interval on unmount
@@ -98,7 +122,6 @@ export default function LookoutPage() {
           setNewFeature={setNewFeature}
           addFeature={addFeature}
           removeFeature={removeFeature}
-          getFeatureList={getFeatureList}
         />
 
         <div className="w-1/2 p-4 overflow-y-auto rounded-md">
