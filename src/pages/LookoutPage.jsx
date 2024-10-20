@@ -13,8 +13,8 @@ export default function LookoutPage() {
   const [newFeature, setNewFeature] = useState("");
   const [logs] = useState([
     { _id: 1, severity: 0, description: "All clear" },
-    { _id: 2, severity: 4, description: "Suspicious movement detected" },
-    { _id: 3, severity: 4, description: "Unidentified object spotted"},
+    { _id: 2, severity: 2, description: "Suspicious movement detected" },
+    { _id: 3, severity: 2, description: "Unidentified object spotted"},
   ]);
 
   // FEATURE LIST FUNCTIONS
