@@ -13,6 +13,8 @@
 - **Live updates** with severity-based color-coded alerts
 - Backend storage of previous logs.
 
+![image](https://github.com/user-attachments/assets/e45ce056-0ca0-478e-af10-0e3dd580aba1)
+
 ---
 
 ## **Run the Project**
