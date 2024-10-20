@@ -1,4 +1,4 @@
-# **Lookout **
+# Lookout 
 
 ## **Project Overview**
 
@@ -8,13 +8,13 @@
 
 ## **Features**
 
-- **Real-time log updates** via polling or WebSocket for instant notifications.
-- **Severity-based color-coded alerts**:
-  - **Red:** Critical danger (e.g., fire, intruder)
-  - **Yellow:** Warnings or less severe issues (e.g., smoke detection)
-  - **Green:** All-clear status.
-- **Responsive UI** with animations to highlight new alerts.
+- **FetchAI** uAgents that fetch new prompts from user created features...
+- ... In combination with real-time analyzation of threats with **Google Gemini** 
+- Ability to add multiple media / camera sources 
+- **Concurrent log updates** with Severity-based color-coded alerts
 - Backend integration with API endpoints for fetching or pushing logs and new features dynamically.
+- **Responsive UI** with animations to highlight new alerts.
+
 
 ---
 
@@ -38,7 +38,7 @@ Navigate to the project directory and run:
 
 - pip install -r requirements.txt 
 
-### **3. Running the Program **
+### **3. Running the Program**
 
 - npm run dev
 
