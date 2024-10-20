@@ -3,8 +3,12 @@ import { Card, CardHeader, CardTitle } from "../components/card";
 import FeatureList from "../components/FeatureList";
 import LogsColumn from "../components/LogsColumn";
 import WebcamCapture from "../components/webcam/WebcamSetup";
+import { Button } from "../components/button"; // Adjust the path if necessary
+import { Eye } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
-export default function App() {
+
+export default function LookoutPage() {
   const [features, setFeatures] = useState([
     "Suspicious movement",
     "Unidentified objects",
@@ -24,10 +28,35 @@ export default function App() {
     }
   };
 
+  const navigate = useNavigate();
+
+  // Function to handle the button click
+  const goToHomePage = () => {
+    navigate('/'); // Navigate to the home page
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      <header className="bg-black text-primary-foreground p-4 shadow-md">
-        <h1 className="text-3xl text-white font-bold text-center">Lookout</h1>
+      <header className="p-4 flex justify-between items-center bg-black">
+        <div className="flex items-center space-x-2">
+          <Eye className="h-8 w-8 text-white" />
+          <span className="text-2xl text-white font-bold">Lookout Demo</span>
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110" 
+            onClick={goToHomePage}
+          >
+            Home
+          </Button>
+          <Button
+            variant="outline"
+            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110" 
+          >
+            Sign Up
+          </Button>
+        </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
