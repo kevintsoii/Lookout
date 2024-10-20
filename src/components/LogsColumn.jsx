@@ -7,7 +7,7 @@ const LogsColumn = () => {
 
   const fetchThreatLogs = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/logs"); // Adjust API path if needed
+      const response = await fetch("http://localhost:5050/api/logs"); // Adjust API path if needed
       const data = await response.json();
 
       if (data && data.length > 0) {
