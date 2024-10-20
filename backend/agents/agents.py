@@ -52,10 +52,10 @@ def upload_file(file_path):
     return response.text
 
 
-class AnalysisRequest(Model):
+class Request(Model):
     file_path: str
 
-class TextDescription(Model):
+class Response(Model):
     text: str
 
 
@@ -63,7 +63,7 @@ video_analyzer = Agent(
     name="video_analyzer",
     seed="lookout video analyzer",
     port=5001,
-    endpoint=["http://localhost:5001"],
+    endpoint=["http://127.0.0.1:5001/submit"],
 )
 
 fund_agent_if_low(video_analyzer.wallet.address())
@@ -71,20 +71,25 @@ fund_agent_if_low(video_analyzer.wallet.address())
 @video_analyzer.on_event("startup")
 async def introduce_agent(ctx: Context):
     ctx.logger.info(f"Hello, I'm agent {video_analyzer.name} and my address is {video_analyzer.address}.") 
+    # agent1qt8r5gxe6q4pyfyg0cf0lz83g7f5zw6787y3ts0ps87qcx9uq3fg78taj5q
 
-@video_analyzer.on_query(model=AnalysisRequest, replies={TextDescription})
-async def query_handler(ctx: Context, sender: str, _query: AnalysisRequest):
+@video_analyzer.on_query(model=Request, replies={Response})
+async def query_handler(ctx: Context, sender: str, _query: Request):
     file_path = _query.file_path
     ctx.logger.info("Received file path: {file_path}")
-    ctx.logger.info(upload_file(file_path))
+    return Response(
+        text=upload_file(file_path)
+    )
 
-
-@video_analyzer.on_rest_post("/analysis", AnalysisRequest, TextDescription)
-async def handle_post(ctx: Context, req: AnalysisRequest) -> TextDescription:
+'''
+REST API version
+@video_analyzer.on_rest_post("/analysis", Request, Response)
+async def handle_post(ctx: Context, req: Request) -> Response:
     ctx.logger.info("Received POST request")
-    return TextDescription(
+    return Response(
         text=upload_file(req.file_path)
     )
+'''
 
 if __name__ == "__main__":
     video_analyzer.run()

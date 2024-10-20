@@ -31,8 +31,14 @@ UPLOAD_FOLDER = './uploads'
 
 frame_buffer = {}
 
-async def gemini_call(arg):
-    print(arg, 'async')
+async def gemini_call(file_path):
+    print(file_path)
+    try:
+        response = await query(destination=VIDEO_ANALYZER_ADDRESS, message=Request(file_path=r'backend\0-1729384806.5118058.mp4'), timeout=15.0)
+        return str(response)
+    except Exception as e:
+        print("ERROR", e)
+
 
 def process_buffer(camera_id):
     global frame_buffer
@@ -113,11 +119,13 @@ def handle_video_frame(args):
 class Request(Model):
     file_path: str
 
+'''
+REST API
 @app.route("/test", methods=["GET"])
 async def test():
+    print('starting test')
     return requests.post('http://localhost:5001/analysis', json={"file_path": r"backend\0-1729384806.5118058.mp4"}).text
-
-
+'''
 
 # MAIN
 
