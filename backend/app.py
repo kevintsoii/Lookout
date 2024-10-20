@@ -16,7 +16,12 @@ from uagents.query import query
 from uagents import Model
 from flask_cors import CORS
 
+from pymongo import MongoClient
+from bson.json_util import dumps
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 VIDEO_ANALYZER_ADDRESS = "agent1qt8r5gxe6q4pyfyg0cf0lz83g7f5zw6787y3ts0ps87qcx9uq3fg78taj5q"
 PROMPT_BUILDER_ADDRESS = "agent1qt2zjzgp62m86w65af2yw8rkr749ghu8p724yztg9wvqe3srlyteuhzgedu"
@@ -127,7 +132,35 @@ def handle_video_frame(args):
         frame_buffer[camera_id]["timer"] = timer
         frame_buffer[camera_id]["updated"] = time.time()
 
+# MongoDB connection
+mongo_uri = os.getenv("MONGO_URI") # add your own mongo connection in .env
+client = MongoClient(mongo_uri) 
+db = client["lookout-database"]
+logs_collection = db.logs  # Access your collection
 
+try:
+    client.server_info()  # Check if connection is successful
+    print("Connected to MongoDB successfully!")
+except Exception as e:
+    print(f"Error connecting to MongoDB: {e}")
+
+# Get all logs from MongoDB
+@app.route('/api/logs', methods=['GET'])
+def get_log():
+    logs = logs_collection.find({})
+    return dumps(logs)  # dumps() to convert BSON to JSON
+
+# Add a new user to MongoDB
+@app.route('/api/logs', methods=['POST'])
+def add_log():
+    data = request.json  # Get data from React frontend
+    new_log = {
+        "_id": data['_id'],
+        "severity": data['severity'],
+        "description": data['description']
+    }
+    logs_collection.insert_one(new_log)
+    return jsonify({"message": "User added successfully"}), 201
 
 
 
