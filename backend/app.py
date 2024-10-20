@@ -29,6 +29,9 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', path='
 
 
 UPLOAD_FOLDER = './uploads'
+if os.path.exists(UPLOAD_FOLDER):
+    shutil.rmtree(UPLOAD_FOLDER)
+os.makedirs(UPLOAD_FOLDER)
 
 
 frame_buffer = {}
@@ -127,19 +130,6 @@ def handle_video_frame(args):
 
 
 
-class BuildRequest(Model):
-    prompt_items: list
-
-@app.route('/features', methods=['GET'])
-async def features():
-    requests.post(f'http://127.0.0.1:5001/build', json={"prompt_items": ["fire", "flood", "theft"]})
-    print("asdasd")
-    return "good"
-
-
-
-
-
 
 
 
@@ -177,36 +167,22 @@ async def test():
 def index():
     return 'Hello, World!'
 
-def agent_query(req):
-    # Synchronous call to agent
-    response = query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
-    data = json.loads(response.decode_payload())
-    command = data["text"]
-    return command
 
-@app.route("/command", methods=["POST"])
-def make_agent_call():
-    try:
-        req = {"file_path": "/Users/marvinzhai/Desktop/videos/threat.mp4"}
-        res = agent_query(req)
-        return jsonify(f"successful call - agent response: {res}")
-    except Exception as e:
-        return jsonify(f"unsuccessful agent call - {str(e)}"), 500
-
+features = []
 @app.route('/features', methods=['GET', 'POST'])
 def manage_features():
     global features
     if request.method == 'GET':
-        # Return the current features list
         return jsonify(features), 200
 
     if request.method == 'POST':
-        # Update the features list
         data = request.json  # Expecting an array of features
         if not data or not isinstance(data, list):
             return jsonify({"error": "Invalid data format. Must be an array."}), 400
         
         features = data  # Update features list
+        
+        requests.post(f'http://127.0.0.1:5001/build', json={"prompt_items": features})
         return jsonify({"message": "Features updated successfully!", "features": features}), 200
 
 

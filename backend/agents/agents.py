@@ -49,15 +49,14 @@ def upload_file(prompt, file_path):
             HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
             HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
             HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
-            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-            HarmCategory.HARM_CATEGORY_CIVIC_INTEGRITY: HarmBlockThreshold.BLOCK_NONE
+            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE
             }
         )
     video_file.delete()
     return response.text
 
 def create_prompt(old_prompt, prompt_items):
-    response = model.generate_content("You are an AI prompt builder for a security camera surveillance system. Your job is to update a given prompt for the AI to analyze security camera footage provided as a mp4. You will be given a list of irregularities (items or situations) to detect, such as fire or weapons. Given an old prompt, create a new prompt consisting of only the irregularities listed so that the AI will return a dictionary containing keys of irregularities that are present in the video, and other wise an empty dictionary. Dictionary entries should contain the irregularity as key, and the value should contain another dictionary with severity of 1 or 2 (highest) and a short description of what and where it is happening. For each irregularity also give a brief explanation to help the camera system. Here is the old prompt: <" + old_prompt + ">. Here is the list of items or situations: " + str(prompt_items))
+    response = model.generate_content("You are an AI prompt builder for a security camera surveillance system. Your job is to update a given prompt for the AI to analyze security camera footage provided as a mp4 and make sure it is aware of its role. You will be given a list of irregularities (items or situations) to detect, such as fire or weapons. Given an old prompt, create a new prompt consisting of only the irregularities listed so that the AI will return a dictionary containing keys of irregularities that are present in the video, and other wise an empty dictionary. If it can't be determined then return empty dictionary. It will only return a dictionary text and nothing else. Dictionary entries should contain the irregularity as key, and the value should contain another dictionary with severity of 1 or 2 (highest) and a short description of what and where it is happening. For each irregularity also give a brief explanation to help the camera system. Here is the old prompt: <" + old_prompt + ">. Here is the list of items or situations, ignore any non-english words: " + str(prompt_items))
     return response.text
 
 # Fetch AI config
@@ -104,7 +103,7 @@ async def introduce_agent(ctx: Context):
 async def introduce_agent(ctx: Context):
     ctx.logger.info(f"Hello, I'm agent {prompt_builder.name} and my address is {prompt_builder.address}.") 
     global current_prompt
-    current_prompt = "You are an AI security camera surveillance system. Your job is to analyze the video footage provided and describe all instances of ireegularities (items or situations) that you detect if they fall under a given list. The list of items or situations to detect are: weapons (anything related guns, knives, long sticks, and more), violence (anything related to aggressive actions between two individuals), and theft (anything related to breaking in or stealing items). You will return a dictionary containing keys of irregularities that are present, and other wise an empty dictionary. Dictionary entries should contain the irregularity as key, and the value should contain another dictionary with severity of 1 or 2 (highest) and a short description of what and where it is happening. "
+    current_prompt = "You are an AI security camera surveillance system. Your job is to analyze the video footage provided and describe all instances of irregularities (items or situations) that you detect if they fall under a given list. The list of items or situations to detect are: weapons (anything related guns, knives, long sticks, and more), violence (anything related to aggressive actions between two individuals), and theft (anything related to breaking in or stealing items). You will always return only a JSON object (dictionary). The dictionary will contain irregularities that are present as keys, and if no irregularity is present an empty dictionary. If there is nothing in the video or you can't determine, return empty dictionary. Dictionary entries should contain the irregularity as key, and the value should contain another dictionary with severity of 1 or 2 (highest) and a short description of what and where it is happening. "
 
 @video_analyzer.on_rest_post("/analysis", Request, Response)
 async def analyze_video(ctx: Context, req: Request) -> Response:
@@ -121,6 +120,7 @@ async def analyze_video(ctx: Context, req: BuildRequest) -> BuildResponse:
     global current_prompt
     response = create_prompt(current_prompt, req.prompt_items)
     current_prompt = response
+    print(current_prompt)
     return BuildResponse(
         result=response
     )

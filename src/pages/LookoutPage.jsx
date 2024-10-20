@@ -3,34 +3,31 @@ import { Card, CardHeader, CardTitle } from "../components/card";
 import FeatureList from "../components/FeatureList";
 import LogsColumn from "../components/LogsColumn";
 import WebcamCapture from "../components/webcam/WebcamSetup";
-import { Button } from "../components/button"; 
+import { Button } from "../components/button";
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";  
+import axios from "axios";
 
 export default function LookoutPage() {
-  const [features, setFeatures] = useState([
-    "Suspicious movement",
-    "Unidentified objects",
-    "Unauthorized access"
-  ]);
+  const [features, setFeatures] = useState(["Weapons", "Violence", "Theft"]);
   const [newFeature, setNewFeature] = useState("");
   const [logs] = useState([
     { id: 1, message: "All clear", status: "safe" },
     { id: 2, message: "Suspicious movement detected", status: "danger" },
     { id: 3, message: "Unidentified object spotted", status: "danger" },
   ]);
-  
+
   // FEATURE LIST FUNCTIONS
   const sendFeatures = (featuresToSend) => {
     // Sending data to Flask API
-    axios.post('http://127.0.0.1:5000/features', featuresToSend)
-        .then(response => {
-            console.log("Response from server:", response.data);
-        })
-        .catch(error => {
-            console.error("There was an error sending features!", error);
-        });
+    axios
+      .post("http://127.0.0.1:5050/features", featuresToSend)
+      .then((response) => {
+        console.log("Response from server:", response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error sending features!", error);
+      });
   };
 
   const addFeature = () => {
@@ -43,7 +40,9 @@ export default function LookoutPage() {
   };
 
   const removeFeature = (featureToRemove) => {
-    const updatedFeatures = features.filter((feature) => feature !== featureToRemove);
+    const updatedFeatures = features.filter(
+      (feature) => feature !== featureToRemove
+    );
     setFeatures(updatedFeatures);
     sendFeatures(updatedFeatures); // Send updated features
   };
@@ -61,31 +60,33 @@ export default function LookoutPage() {
 
   const updateTime = () => {
     const now = new Date();
-    const options = { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit', 
-      month: '2-digit', 
-      day: '2-digit', 
-      year: 'numeric', 
-      timeZoneName: 'short' 
+    const options = {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+      timeZoneName: "short",
     };
-    const formattedTime = now.toLocaleString('en-US', options);
+    const formattedTime = now.toLocaleString("en-US", options);
     setCurrentTime(formattedTime);
   };
 
   useEffect(() => {
-    // Fetch the feature list from the Flask backend on component mount
-    axios.get('http://127.0.0.1:5000/features')  // Adjust the URL if necessary
+    /*// Fetch the feature list from the Flask backend on component mount 
+    axios
+      .get("http://127.0.0.1:5050/features") // Adjust the URL if necessary
       .then((response) => {
-        setFeatures(response.data);  // Set the fetched features to the state
+        setFeatures(response.data); // Set the fetched features to the state
       })
       .catch((error) => {
         console.error("There was an error fetching the feature list!", error);
-      });
-    
+      }); */
 
     // Set interval to update the time every second
+    sendFeatures(features);
+
     updateTime(); // Initial time set
     const timer = setInterval(updateTime, 1000); // Update every second
     return () => clearInterval(timer); // Cleanup interval on unmount
@@ -129,7 +130,9 @@ export default function LookoutPage() {
             <CardHeader>
               <CardTitle>Live Video Feed</CardTitle>
             </CardHeader>
-            <div className="mt-4 text-base font-semibold text-red-800/70 flex justify-center items-center"> {currentTime} </div>
+            <div className="my-2 text-base font-semibold text-red-800/70 flex justify-center items-center">
+              {currentTime}
+            </div>
 
             <div className="custom-scrollbar overflow-x-hidden grow flex flex-col px-12 w-full text-xl justify-center items-center rounded-md">
               <WebcamCapture />

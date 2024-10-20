@@ -74,7 +74,7 @@ const WebcamCapture = () => {
   };
 
   return (
-    <div className="relative flex flex-col w-full min-h-full py-6 max-h-full items-center">
+    <div className="relative flex flex-col w-full min-h-full pb-6 max-h-full items-center">
       {cameras.length > 0 ? (
         cameras.map((camera, index) => (
           <Webcam key={camera.id} camera={{ ...camera, index }} />
