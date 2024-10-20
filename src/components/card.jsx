@@ -26,7 +26,7 @@ export function CardContent({ className, children }) {
 
 export function CardTitle({ className, children }) {
     return (
-      <h2 className={`text-lg text-center font-semibold ${className}`}>
+      <h2 className={`text-2xl text-center font-bold ${className}`}>
         {children}
       </h2>
     );
