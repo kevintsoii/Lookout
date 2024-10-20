@@ -131,6 +131,7 @@ def handle_video_frame(args):
         timer.start()
         frame_buffer[camera_id]["timer"] = timer
         frame_buffer[camera_id]["updated"] = time.time()
+    
 
 # Features
 

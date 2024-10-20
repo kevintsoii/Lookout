@@ -1,5 +1,5 @@
 from datetime import datetime
-import os
+import os, asyncio
 import json
 import pathlib
 import time, requests
@@ -33,10 +33,10 @@ model = genai.GenerativeModel(
   generation_config=generation_config,
 )
 
-def upload_file(prompt, file_path):
+async def upload_file(prompt, file_path):
     video_file = genai.upload_file(path=file_path) 
     while video_file.state.name == "PROCESSING":
-        time.sleep(4)
+        await asyncio.sleep(0.5)
         video_file = genai.get_file(video_file.name)
 
     if video_file.state.name == "FAILED":
@@ -109,15 +109,17 @@ async def introduce_agent(ctx: Context):
 
 @video_analyzer.on_rest_post("/analysis", Request, Response)
 async def analyze_video(ctx: Context, req: Request) -> Response:
-    ctx.logger.info(f"Video Analysis - {req.file_path}")
-    response = upload_file(current_prompt, req.file_path)
+    ts = int(req.file_path.split('-')[-1].split('.')[0])
+    date_str = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    ctx.logger.info(f"Video Analysis - {time.ctime()} - {date_str}")
+
+    response = await upload_file(current_prompt, req.file_path)
     
     try: response_json = json.loads(response)
     except: response_json = {}
 
 
-    ts = int(req.file_path.split('-')[-1].split('.')[0])
-    date_str = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    
     print(date_str, response_json)
 
     if response_json:

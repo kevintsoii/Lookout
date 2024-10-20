@@ -5,6 +5,13 @@ import { Card, CardContent } from "./card";
 const initialTimestamp = new Date().toLocaleString();
 
 const LogsColumn = () => {
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(
+      timestamp < 1000000000000 ? timestamp * 1000 : timestamp
+    );
+    return date.toLocaleString(); // Format the date to a readable string
+  };
+
   const [logs, setLogs] = useState([
     {
       _id: -1,
@@ -20,12 +27,13 @@ const LogsColumn = () => {
       const data = await response.json();
 
       if (data && data.length > 0) {
-        const newLogs = data.map((log) => ({
-          ...log,
-          ts: initialTimestamp, // Assign current timestamp
-        }));
+        const newLogs = data
+          .filter((log) => log.severity != 0)
+          .map((log) => ({
+            ...log,
+          }));
 
-        setLogs((prevLogs) => [...newLogs, ...prevLogs].slice(0, 8)); // Prepend new logs
+        setLogs(newLogs.slice(0, 10)); // Prepend new logs
       } else {
         setLogs([
           {
@@ -80,21 +88,21 @@ const LogsColumn = () => {
           <Card
             key={log._id}
             className={`rounded-xl shadow-lg text-lg transition-transform transform hover:scale-105 hover:shadow-2xl ${
-              log.severity === 3
+              log.severity >= 2
                 ? "border-red-500 bg-red-300/75"
-                : log.severity === 2
+                : log.severity === 1
                 ? "border-yellow-500 bg-yellow-300/75"
                 : "border-green-500 bg-green-300/75"
             }`}
           >
             <CardContent className="flex items-center p-2 flex-shrink-0">
               <div className="flex-shrink-0">
-                {log.severity === 3 ? (
+                {log.severity >= 2 ? (
                   <AlertTriangle
                     className="text-red-500"
                     style={{ width: "24px", height: "24px" }}
                   />
-                ) : log.severity === 2 ? (
+                ) : log.severity === 1 ? (
                   <AlertCircle
                     className="text-yellow-500"
                     style={{ width: "24px", height: "24px" }}
@@ -108,7 +116,9 @@ const LogsColumn = () => {
               </div>
               <div className="pl-4 flex flex-col">
                 <span>{log.description}</span>
-                <span className="text-gray-400 text-sm">Time: {log.ts}</span>
+                <span className="text-gray-400 text-sm">
+                  {formatTimestamp(log.ts)}
+                </span>
               </div>
             </CardContent>
           </Card>
