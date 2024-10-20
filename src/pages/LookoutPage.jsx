@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle } from "../components/card";
 import FeatureList from "../components/FeatureList";
 import LogsColumn from "../components/LogsColumn";
@@ -39,6 +39,35 @@ export default function LookoutPage() {
     navigate('/'); // Navigate to the home page
   };
 
+  const [currentTime, setCurrentTime] = useState("");
+
+  const getFeatureList = () => {
+    console.log("Current feature list:", features);
+    return features; // This will return the current features
+  };
+
+  const updateTime = () => {
+    const now = new Date();
+    const options = { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit', 
+      month: '2-digit', 
+      day: '2-digit', 
+      year: 'numeric', 
+      timeZoneName: 'short' 
+    };
+    const formattedTime = now.toLocaleString('en-US', options);
+    setCurrentTime(formattedTime);
+  };
+
+  // Set interval to update the time every second
+  useEffect(() => {
+    updateTime(); // Initial time set
+    const timer = setInterval(updateTime, 1000); // Update every second
+    return () => clearInterval(timer); // Cleanup interval on unmount
+  }, []);
+
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       <header className="p-4 flex justify-between items-center bg-black">
@@ -77,6 +106,7 @@ export default function LookoutPage() {
             <CardHeader>
               <CardTitle>Live Video Feed</CardTitle>
             </CardHeader>
+            <div className="mt-4 text-base font-semibold text-red-800/70 flex justify-center items-center"> {currentTime} </div>
 
             <div className="custom-scrollbar overflow-x-hidden grow flex flex-col px-12 w-full text-xl justify-center items-center rounded-md">
               <WebcamCapture />
