@@ -1,33 +1,55 @@
 import { AlertTriangle, PlusCircle, X } from "lucide-react";
 import { Input } from "./input";
 import { Button } from "./button";
+import { AnimatePresence, motion } from "framer-motion";
 
-const FeatureList = ({ features, newFeature, setNewFeature, addFeature, removeFeature }) => {
+const FeatureList = ({
+  features,
+  newFeature,
+  setNewFeature,
+  addFeature,
+  removeFeature,
+}) => {
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      addFeature();
+    }
+  };
   return (
-    <div className="w-1/4 p-4 bg-white shadow-md overflow-y-auto flex flex-col rounded-xl">
+    <div className="w-1/4 p-4 bg-white shadow-md overflow-y-auto flex flex-col rounded-xl  ">
       <h2 className="text-2xl font-bold mb-4 text-center">Features</h2>
+
       <ul className="space-y-2 mb-4 flex-grow">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-center justify-between space-x-2">
-          <div className="flex items-center space-x-2 flex-grow">
-            <AlertTriangle className="text-yellow-500" />
-            <span className="text-lg">{feature}</span>
-          </div>
-          <button
-            onClick={() => removeFeature(feature)} // Call removeFeature on click
-            className="text-red-500 hover:text-red-700 ml-2" // Add margin to create space from the feature name
-            aria-label={`Remove ${feature}`} // Accessibility improvement
-          >
-            <X className="h-6 w-6" /> {/* Red X icon */}
-          </button>
-        </li>
-        ))}
+        <AnimatePresence>
+          {features.map((feature, index) => (
+            <motion.li
+              key={index}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="mb-2 flex items-center justify-between space-x-2"
+            >
+              <div className="flex items-center space-x-2 flex-grow">
+                <AlertTriangle className="text-yellow-500" />
+                <span>{feature}</span>
+              </div>
+              <button
+                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                onClick={() => removeFeature(feature)}
+              >
+                Remove
+              </button>
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
       <div className="mt-auto w-full rounded-lg">
         <Input
           type="text"
           value={newFeature}
           onChange={(e) => setNewFeature(e.target.value)}
+          onKeyDown={handleKeyPress}
           placeholder="New feature"
           className="mb-2 w-full"
         />

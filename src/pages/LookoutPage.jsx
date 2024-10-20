@@ -62,7 +62,7 @@ export default function LookoutPage() {
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden p-2">
         <FeatureList
           features={features}
           newFeature={newFeature}
