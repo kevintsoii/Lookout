@@ -2,52 +2,65 @@
 
 ## **Project Overview**
 
-**Lookout** is a real-time threat detection tool designed with Google Gemini and FetchAI uAgents. Lookout is a way home cameras to analyze live footage and focus on potential threats, cutting the amount of alerts that pose no danger. 
+**Lookout** is a AI video camera monitoring tool with real-time threat detection. It is designed to analyze live footage of both home and security cameras using Google Gemini and FetchAI uAgents. By allowing users to add custom detections for any type of event (fires, floods, package deliveries, robberies, etc.), Lookout has become the best way to enhance your existing security systems.
+
+### **Features**
+
+- **FetchAI** uAgents to create custom prompts based off of user-requested "features" (events to detect)
+- **Google Gemini** for real-time analysis of video footage
+- WebSockets for video data transfer
+- Adding multiple camera sources 
+- **Live updates** with severity-based color-coded alerts
+- Backend storage of previous logs.
 
 ---
 
-## **Features**
-
-- **FetchAI** uAgents that fetch new prompts from user created features...
-- ... In combination with real-time analyzation of threats with **Google Gemini** 
-- Ability to add multiple media / camera sources 
-- **Concurrent log updates** with Severity-based color-coded alerts
-- Backend integration with API endpoints for fetching or pushing logs and new features dynamically.
-- **Responsive UI** with animations to highlight new alerts.
-
-
----
-
-## **Instructions to Run the Project**
+## **Run the Project**
 
 ### **1. Prerequisites:**
 
 - Node.js
 - Python
-- Socket.io 
+- .env file
+```
+GEMINI_API_KEY=
+MONGO_URI=
+```
 
 ### **2. Install Dependencies:**
 
 Navigate to the project directory and run:
 
-- npm install
-
-- pip install flask
-
-- pip install uagents
-
-- pip install -r requirements.txt 
+```
+npm install
+pip install -r requirements.txt 
+```
 
 ### **3. Running the Program**
 
-- npm run dev
+- One separate terminal is required for each
 
-- py backend/app.py
+```
+npm run dev
+```
 
-- py backend/agents/agents.py
+```
+py backend/app.py
+```
+
+
+```
+py backend/agents/agents.py
+```
+
+### **4. Visit the site!**
+
+- http://localhost:8000/
 
 --- 
 
-## **Possible Use Cases**
-- Detect any sort of danger such as crime, or assault
-- Detect house fires, or floods
+## **Use Cases**
+- Detect any sort of danger such as crime or robbery
+- Detect house fires, or floods and other natural disasters for quick government response
+- Detect non-threats such as package deliveries
+
