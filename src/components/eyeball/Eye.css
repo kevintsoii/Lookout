@@ -1,0 +1,43 @@
+
+.eye-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+ 
+  }
+  
+  .eye {
+    width: 80px;
+    height: 120px; 
+    background-color: white;
+    border-radius: 50% / 50%;
+    border: 3px solid black;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    
+  }
+  
+  .pupil {
+    width: 30px;
+    height: 30px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    transition: transform 0.05s ease-out;
+  }
+  
+  
+  .eye::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50% / 50%;
+    box-shadow: inset 0px -15px 20px rgba(0, 0, 0, 0.1); 
+  }
