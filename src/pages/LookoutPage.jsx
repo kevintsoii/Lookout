@@ -32,6 +32,11 @@ export default function LookoutPage() {
     setFeatures(features.filter(feature => feature !== featureToRemove));
   };
 
+  const getFeatureList = () => {
+    console.log("Current feature list:", features);
+    return features; // This will return the current features
+  };
+
   const navigate = useNavigate();
 
   // Function to handle the button click
@@ -40,11 +45,6 @@ export default function LookoutPage() {
   };
 
   const [currentTime, setCurrentTime] = useState("");
-
-  const getFeatureList = () => {
-    console.log("Current feature list:", features);
-    return features; // This will return the current features
-  };
 
   const updateTime = () => {
     const now = new Date();
@@ -99,6 +99,7 @@ export default function LookoutPage() {
           setNewFeature={setNewFeature}
           addFeature={addFeature}
           removeFeature={removeFeature}
+          getFeatureList={getFeatureList}
         />
 
         <div className="w-1/2 p-4 overflow-y-auto rounded-md">

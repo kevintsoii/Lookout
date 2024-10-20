@@ -25,6 +25,9 @@ os.makedirs(UPLOAD_FOLDER)
 
 frame_buffer = {}
 
+# Global variable to hold features
+features = []
+
 async def gemini_call(arg):
     print(arg, 'async')
 
@@ -128,6 +131,11 @@ def make_agent_call():
     except Exception as e:
         return jsonify(f"unsuccessful agent call - {str(e)}"), 500
 
+# New endpoint to get the feature list
+@app.route("/features", methods=["GET"])
+def get_features():
+    features = jsonify(features)
+    return features
 
 
 # MAIN
