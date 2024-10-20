@@ -14,6 +14,8 @@ from flask_socketio import SocketIO
 
 from uagents.query import query
 from uagents import Model
+from flask_cors import CORS
+
 
 
 VIDEO_ANALYZER_ADDRESS = "agent1qt8r5gxe6q4pyfyg0cf0lz83g7f5zw6787y3ts0ps87qcx9uq3fg78taj5q"
@@ -22,15 +24,11 @@ PROMPT_BUILDER_ADDRESS = "agent1qt2zjzgp62m86w65af2yw8rkr749ghu8p724yztg9wvqe3sr
 
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', path='/socket')
 
 
 UPLOAD_FOLDER = './uploads'
-if os.path.exists(UPLOAD_FOLDER):
-    shutil.rmtree(UPLOAD_FOLDER)
-os.makedirs(UPLOAD_FOLDER)
-
 
 
 frame_buffer = {}
@@ -41,7 +39,6 @@ def gemini_call(file_path):
         print('passed', file_path)
     except Exception as e:
         print("ERROR", e)
-
 
 def process_buffer(camera_id):
     global frame_buffer
@@ -168,8 +165,6 @@ def get_logs():
 class Request(Model):
     file_path: str
 
-
-
 '''
 REST API
 @app.route("/test", methods=["GET"])
@@ -177,6 +172,43 @@ async def test():
     print('starting test')
     return requests.post('http://localhost:5001/analysis', json={"file_path": r"backend\0-1729384806.5118058.mp4"}).text
 '''
+
+@app.route('/')
+def index():
+    return 'Hello, World!'
+
+def agent_query(req):
+    # Synchronous call to agent
+    response = query(destination=AGENT_ADDRESS, message=req, timeout=15.0)
+    data = json.loads(response.decode_payload())
+    command = data["text"]
+    return command
+
+@app.route("/command", methods=["POST"])
+def make_agent_call():
+    try:
+        req = {"file_path": "/Users/marvinzhai/Desktop/videos/threat.mp4"}
+        res = agent_query(req)
+        return jsonify(f"successful call - agent response: {res}")
+    except Exception as e:
+        return jsonify(f"unsuccessful agent call - {str(e)}"), 500
+
+@app.route('/features', methods=['GET', 'POST'])
+def manage_features():
+    global features
+    if request.method == 'GET':
+        # Return the current features list
+        return jsonify(features), 200
+
+    if request.method == 'POST':
+        # Update the features list
+        data = request.json  # Expecting an array of features
+        if not data or not isinstance(data, list):
+            return jsonify({"error": "Invalid data format. Must be an array."}), 400
+        
+        features = data  # Update features list
+        return jsonify({"message": "Features updated successfully!", "features": features}), 200
+
 
 # MAIN
 
