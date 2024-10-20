@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { AlertTriangle, CheckCircle , AlertCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "./card";
 
 const LogsColumn = () => {
-  const [logs, setLogs] = useState([{ id: 0, status: "clear", message: "All clear" }]);
+  const [logs, setLogs] = useState([
+    { id: 0, status: "clear", message: "All clear" },
+  ]);
 
   const fetchThreatLogs = async () => {
     try {
@@ -20,9 +22,27 @@ const LogsColumn = () => {
     }
   };
 
+  const deleteLogs = async () => {
+    try {
+      const response = await fetch("http://localhost:5050/api/logs", {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        console.log("Logs deleted successfully");
+        setLogs([{ id: 0, status: "clear", message: "All clear" }]);
+      } else {
+        console.error("Failed to delete logs");
+      }
+    } catch (error) {
+      console.error("Error deleting logs:", error);
+    }
+  };
+
   useEffect(() => {
+    deleteLogs();
     fetchThreatLogs();
-    const interval = setInterval(fetchThreatLogs, 10000); // Poll every 10 seconds
+    const interval = setInterval(fetchThreatLogs, 1000); // Poll every 10 seconds
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
@@ -31,27 +51,27 @@ const LogsColumn = () => {
       <h2 className="text-2xl font-bold mb-4 text-center">Logs</h2>
       <div className="space-y-2">
         {logs.map((log) => (
-         <Card
-         key={log.id}
-         className={`rounded-xl shadow-lg text-lg transition-transform transform hover:scale-105 hover:shadow-2xl ${
-           log.status === "danger"
-             ? "border-red-500 bg-red-300"
-             : log.status === "warning"
-             ? "border-yellow-500 bg-yellow-300"
-             : "border-green-500 bg-green-300"
-         }`}
-       >
-         <CardContent className="flex items-center p-2">
-           {log.status === "danger" ? (
-             <AlertTriangle className="text-red-500 mr-2" />
-           ) : log.status === "warning" ? (
-             <AlertCircle className="text-yellow-500 mr-2" />
-           ) : (
-             <CheckCircle className="text-green-500 mr-2" />
-           )}
-           <span>{log.message}</span>
-         </CardContent>
-       </Card>
+          <Card
+            key={log.id}
+            className={`rounded-xl shadow-lg text-lg transition-transform transform hover:scale-105 hover:shadow-2xl ${
+              log.status === "danger"
+                ? "border-red-500 bg-red-300"
+                : log.status === "warning"
+                ? "border-yellow-500 bg-yellow-300"
+                : "border-green-500 bg-green-300"
+            }`}
+          >
+            <CardContent className="flex items-center p-2">
+              {log.status === "danger" ? (
+                <AlertTriangle className="text-red-500 mr-2" />
+              ) : log.status === "warning" ? (
+                <AlertCircle className="text-yellow-500 mr-2" />
+              ) : (
+                <CheckCircle className="text-green-500 mr-2" />
+              )}
+              <span>{log.message}</span>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
@@ -59,4 +79,3 @@ const LogsColumn = () => {
 };
 
 export default LogsColumn;
-

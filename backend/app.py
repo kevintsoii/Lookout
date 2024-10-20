@@ -132,6 +132,29 @@ def handle_video_frame(args):
         frame_buffer[camera_id]["timer"] = timer
         frame_buffer[camera_id]["updated"] = time.time()
 
+# Features
+
+features = []
+@app.route('/features', methods=['GET', 'POST'])
+def manage_features():
+    global features
+    if request.method == 'GET':
+        return jsonify(features), 200
+
+    if request.method == 'POST':
+        data = request.json  # Expecting an array of features
+        if not data or not isinstance(data, list):
+            return jsonify({"error": "Invalid data format. Must be an array."}), 400
+        
+        features = data  # Update features list
+        
+        requests.post(f'http://127.0.0.1:5001/build', json={"prompt_items": features})
+        return jsonify({"message": "Features updated successfully!", "features": features}), 200
+
+
+
+
+
 # MongoDB connection
 mongo_uri = os.getenv("MONGO_URI") # add your own mongo connection in .env
 client = MongoClient(mongo_uri) 
@@ -149,6 +172,11 @@ except Exception as e:
 def get_log():
     logs = logs_collection.find({})
     return dumps(logs)  # dumps() to convert BSON to JSON
+
+@app.route('/api/logs', methods=['DELETE'])
+def delete_logs():
+    result = logs_collection.delete_many({})  # Deletes all documents in the collection
+    return {'message': f'{result.deleted_count} logs deleted.'}, 200
 
 # Add a new user to MongoDB
 @app.route('/api/logs', methods=['POST'])
@@ -180,43 +208,8 @@ logs = [
     {"id": 2, "status": "danger", "message": "Unidentified object spotted"}
 ]
 
-# endpoint for logs 
-@app.route("/api/logs", methods=["GET"])
-def get_logs():
-    # Here you can retrieve or process logs dynamically (e.g., from your video analyzer)
-    return jsonify(logs)
 class Request(Model):
     file_path: str
-
-'''
-REST API
-@app.route("/test", methods=["GET"])
-async def test():
-    print('starting test')
-    return requests.post('http://localhost:5001/analysis', json={"file_path": r"backend\0-1729384806.5118058.mp4"}).text
-'''
-
-@app.route('/')
-def index():
-    return 'Hello, World!'
-
-
-features = []
-@app.route('/features', methods=['GET', 'POST'])
-def manage_features():
-    global features
-    if request.method == 'GET':
-        return jsonify(features), 200
-
-    if request.method == 'POST':
-        data = request.json  # Expecting an array of features
-        if not data or not isinstance(data, list):
-            return jsonify({"error": "Invalid data format. Must be an array."}), 400
-        
-        features = data  # Update features list
-        
-        requests.post(f'http://127.0.0.1:5001/build', json={"prompt_items": features})
-        return jsonify({"message": "Features updated successfully!", "features": features}), 200
 
 
 # MAIN

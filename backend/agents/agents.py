@@ -53,6 +53,7 @@ def upload_file(prompt, file_path):
             }
         )
     video_file.delete()
+    print(f">>>>>>>>>>>{response.text}<<<<<<<<<<")
     return response.text
 
 def create_prompt(old_prompt, prompt_items):
