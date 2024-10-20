@@ -87,7 +87,7 @@ const WebcamCapture = () => {
 
       <div className=" sticky  bottom-0 left-0 pt-3 border-gray-400 border-t bg-white flex flex-col w-full items-center mt-4 gap-3">
         <select
-          className=" w-96 border-gray-400 border active:border-black pl-2 w-full"
+          className=" w-96 border-gray-400 border active:border-black py-2 pl-2 w-full"
           onChange={handleSelectChange}
           value={selected.deviceId || ""}
         >

@@ -5,8 +5,7 @@ import LogsColumn from "../components/LogsColumn";
 import WebcamCapture from "../components/webcam/WebcamSetup";
 import { Button } from "../components/button"; // Adjust the path if necessary
 import { Eye } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 export default function LookoutPage() {
   const [features, setFeatures] = useState([
@@ -29,14 +28,14 @@ export default function LookoutPage() {
   };
 
   const removeFeature = (featureToRemove) => {
-    setFeatures(features.filter(feature => feature !== featureToRemove));
+    setFeatures(features.filter((feature) => feature !== featureToRemove));
   };
 
   const navigate = useNavigate();
 
   // Function to handle the button click
   const goToHomePage = () => {
-    navigate('/'); // Navigate to the home page
+    navigate("/"); // Navigate to the home page
   };
 
   return (
@@ -44,19 +43,19 @@ export default function LookoutPage() {
       <header className="p-4 flex justify-between items-center bg-black">
         <div className="flex items-center space-x-2">
           <Eye className="h-8 w-8 text-white" />
-          <span className="text-2xl text-white font-bold">Lookout Demo</span>
+          <span className="text-2xl text-white font-bold">Lookout</span>
         </div>
         <div className="space-x-2">
           <Button
             variant="outline"
-            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-200 transform hover:scale-110" 
+            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-200 transform hover:scale-110"
             onClick={goToHomePage}
           >
             Home
           </Button>
           <Button
             variant="outline"
-            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-200 transform hover:scale-110" 
+            className="px-6 py-3 bg-primary-foreground rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-200 transform hover:scale-110"
           >
             Sign Up
           </Button>

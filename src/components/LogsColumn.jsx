@@ -8,13 +8,13 @@ const LogsColumn = ({ logs }) => {
       <div className="space-y-2">
         {logs.map((log) => (
           <Card
-          key={log.id}
-          className={`rounded-xl shadow-lg text-lg transition-transform transform hover:scale-105 hover:shadow-2xl ${
-            log.status === "danger"
-              ? "border-red-500 bg-red-50"
-              : "border-green-500 bg-green-50"
-          }`}
-        >
+            key={log.id}
+            className={`rounded-xl shadow-lg text-lg transition-transform transform hover:scale-105 hover:shadow-2xl ${
+              log.status === "danger"
+                ? "border-red-500 bg-red-300/75"
+                : "border-green-500 bg-green-300/75"
+            }`}
+          >
             <CardContent className="flex items-center p-2">
               {log.status === "danger" ? (
                 <AlertTriangle className="text-red-500 mr-2" />

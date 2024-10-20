@@ -1,16 +1,14 @@
 // Adjust the import path according to your folder structure
 import { Button } from "../components/button"; // Adjust the path if necessary
 import { Eye } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
-
   const navigate = useNavigate();
 
   // Function to handle the button click
   const goToLookoutPage = () => {
-    navigate('/lookout'); // Navigate to the /lookout page
+    navigate("/lookout"); // Navigate to the /lookout page
   };
 
   return (
@@ -23,25 +21,29 @@ export default function HomePage() {
         <div className="space-x-2">
           <Button
             variant="outline"
-            className="px-6 py-3 bg-primary-foreground text-primary rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110" 
+            className="px-6 py-3 bg-primary-foreground text-primary rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110"
           >
             Login
           </Button>
           <Button
             variant="outline"
-            className="px-6 py-3 bg-primary-foreground text-primary rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110" 
+            className="px-6 py-3 bg-primary-foreground text-primary rounded font-semibold hover:bg-white hover:text-stone-900 hover:font-bold transition-all duration-300 transform hover:scale-110"
           >
             Sign Up
           </Button>
         </div>
       </header>
       <main className="flex flex-col items-center justify-center h-[calc(100vh-80px)]">
-        <h1 className="text-6xl font-bold mb-8 text-center"> Stay on the Lookout </h1>
-        <p className="text-xl mb-8 text-center max-w-2xl">
-          Protect what matters most with our advanced AI-powered surveillance system. Detect dangers in real-time and stay one step ahead.
+        <h1 className="text-6xl font-bold mb-8 text-center">
+          {" "}
+          Stay on the Lookout{" "}
+        </h1>
+        <p className="text-2xl mb-8 text-center max-w-2xl">
+          Protect what matters most with our advanced AI-powered surveillance
+          system. Detect dangers in real-time and stay one step ahead.
         </p>
-        <Button 
-          className="px-7 py-4 bg-primary-foreground text-l font-semibold rounded hover:bg-white hover:text-stone-600 hover:font-bold transition-all duration-200 transform hover:scale-110" 
+        <Button
+          className="px-7 py-4 bg-primary-foreground text-l font-semibold rounded hover:bg-white hover:text-stone-600 hover:font-bold transition-all duration-200 transform hover:scale-110"
           size="lg"
           onClick={goToLookoutPage}
         >
