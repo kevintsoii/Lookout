@@ -17,6 +17,7 @@ from uagents import Model
 
 
 VIDEO_ANALYZER_ADDRESS = "agent1qt8r5gxe6q4pyfyg0cf0lz83g7f5zw6787y3ts0ps87qcx9uq3fg78taj5q"
+PROMPT_BUILDER_ADDRESS = "agent1qt2zjzgp62m86w65af2yw8rkr749ghu8p724yztg9wvqe3srlyteuhzgedu"
 
 
 
@@ -71,7 +72,7 @@ def process_buffer(camera_id):
         frame_buffer[camera_id]["updated"] = time.time()
         timer.start()
 
-#cors
+# cors
 @app.after_request
 def add_cors_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -79,6 +80,8 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+
+# sockets
 @socketio.on('connect')
 def handle_connect():
     client_id = request.args.get('id', "Unknown")
@@ -123,6 +126,32 @@ def handle_video_frame(args):
         timer.start()
         frame_buffer[camera_id]["timer"] = timer
         frame_buffer[camera_id]["updated"] = time.time()
+
+
+
+
+class BuildRequest(Model):
+    prompt_items: list
+
+@app.route('/features', methods=['GET'])
+async def features():
+    requests.post(f'http://127.0.0.1:5001/build', json={"prompt_items": ["fire", "flood", "theft"]})
+    print("asdasd")
+    return "good"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Sample logs to demonstrate. Replace this logic with dynamic threat detection logic.
