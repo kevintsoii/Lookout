@@ -74,7 +74,10 @@ const LogsColumn = () => {
               ) : (
                 <CheckCircle className="text-green-500 mr-2" />
               )}
-              <span>{log.description}</span>
+              <div className="pl-2 div flex flex-col">
+                <span>{log.description}</span>
+                <span className="text-gray-400 text-sm">Time: {log.ts}</span>
+              </div>
             </CardContent>
           </Card>
         ))}
