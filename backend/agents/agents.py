@@ -111,9 +111,10 @@ async def introduce_agent(ctx: Context):
 async def analyze_video(ctx: Context, req: Request) -> Response:
     ts = int(req.file_path.split('-')[-1].split('.')[0])
     date_str = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-    ctx.logger.info(f"Video Analysis - {time.ctime()} - {date_str}")
+    start = time.ctime()
 
     response = await upload_file(current_prompt, req.file_path)
+    ctx.logger.info(f"Video Analysis - {start} starting on video from {date_str} end at {time.ctime()}")
     
     try: response_json = json.loads(response)
     except: response_json = {}

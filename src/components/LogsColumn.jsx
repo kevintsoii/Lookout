@@ -27,13 +27,18 @@ const LogsColumn = () => {
       const data = await response.json();
 
       if (data && data.length > 0) {
-        const newLogs = data
-          .filter((log) => log.severity != 0)
-          .map((log) => ({
-            ...log,
-          }));
-
-        setLogs(newLogs.slice(0, 10)); // Prepend new logs
+        const newLogs = data.filter((log) => log.severity != 0);
+        if (newLogs.length > 0)
+          setLogs(newLogs.slice(0, 10)); // Prepend new logs
+        else
+          setLogs([
+            {
+              _id: -1,
+              ts: initialTimestamp,
+              severity: "clear",
+              description: "All clear",
+            },
+          ]);
       } else {
         setLogs([
           {
@@ -116,7 +121,7 @@ const LogsColumn = () => {
               </div>
               <div className="pl-4 flex flex-col">
                 <span>{log.description}</span>
-                <span className="text-gray-400 text-sm">
+                <span className="text-gray-500 text-sm">
                   {formatTimestamp(log.ts)}
                 </span>
               </div>
