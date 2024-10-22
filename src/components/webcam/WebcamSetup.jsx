@@ -84,6 +84,7 @@ const WebcamCapture = () => {
           <Video size={175} />
         </div>
       )}
+
       <div className=" sticky  bottom-0 left-0 pt-3 border-gray-300 border-t bg-white flex flex-col w-full items-center mt-4 gap-3">
         <select
           className="w-96 border-gray-400 border active:border-black py-2 pl-2 w-full"

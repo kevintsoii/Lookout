@@ -7,6 +7,7 @@ import { Button } from "../components/button"; // Adjust the path if necessary
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { axios } from "axios";
 
 export default function LookoutPage() {
   const [features, setFeatures] = useState([
@@ -56,7 +57,7 @@ export default function LookoutPage() {
         transition={{ duration: 0.5 }}
       >
         {" "}
-        <header className="p-4 flex items-center w-full border-b border-gray-600 ">
+        <header className="p-4 flex items-center w-full border-b border-gray-600 animate-fade-in">
           <div className="flex items-center space-x-2">
             <Eye className="h-8 w-8 text-white" />
             <span className="text-2xl text-white font-bold">Lookout</span>
